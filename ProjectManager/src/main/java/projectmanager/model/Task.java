@@ -23,6 +23,29 @@ public class Task {
 		this.parentTask = parentTask;
 	}
 	
+	public void addTeammate(Teammate teammate) {
+		this.assignees.add(teammate);
+	}
+	
+	public void removeTeammate(Teammate teammate) {
+		this.assignees.remove(teammate);
+	}
+	
+	public void setCompleted(Boolean completed) {
+		this.completed = completed;
+	}
+	
+	public void setSubTasks(ArrayList<Task> subTasks) {
+		this.subTasks = subTasks;
+	}
+	
+	public void addSubTask(Task subTask) {
+		this.subTasks.add(subTask);
+	}
+	
+	public void renameTask(String title) {
+		this.title = title;
+	}
 	
 	@Override
 	public boolean equals(Object o) {

@@ -20,6 +20,14 @@ public class Teammate {
 		this.tasks = new ArrayList<Task>();
 	}
 	
+	public void addTask(Task task) {
+		this.tasks.add(task);
+	}
+	
+	public void removeTask(Task task) {
+		this.tasks.remove(task);
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o == null) {

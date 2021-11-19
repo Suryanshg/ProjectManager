@@ -26,6 +26,18 @@ public class Project {
 		isArchived = false;		
 	}
 	
+	public void addTeammate(Teammate teammate) {
+		this.teammates.add(teammate);
+	}
+	
+	public void removeTeammate(Teammate teammate) {
+		this.teammates.remove(teammate);
+	}
+	
+	public void addTask(Task task) {
+		this.tasks.add(task);
+	}
+	
 	@Override
 	public boolean equals(Object o) {
 		if (o == null) {
