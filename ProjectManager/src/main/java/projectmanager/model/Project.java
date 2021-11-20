@@ -26,6 +26,14 @@ public class Project {
 		isArchived = false;		
 	}
 	
+	public Project(UUID id, String name, boolean isArchived) {
+		this.id = id;
+		this.name = name;
+		this.tasks = new ArrayList<Task>();
+		this.teammates = new ArrayList<Teammate>();
+		this.isArchived = isArchived;
+	}
+	
 	public void addTeammate(Teammate teammate) {
 		this.teammates.add(teammate);
 	}
