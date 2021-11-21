@@ -52,12 +52,12 @@ public class ProjectDAO {
 	}
 
 	// Retrieving a Project
-	public Project getProject(String id) throws Exception { // we can search on the basis of name also
+	public Project getProject(String name) throws Exception { // we can search on the basis of name also
 
 		try {
 			Project project = null;
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Project WHERE id=?;");
-			ps.setString(1,  id);
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Project WHERE name=?;");
+			ps.setString(1,  name);
 			ResultSet resultSet = ps.executeQuery();
 
 			while (resultSet.next()) {

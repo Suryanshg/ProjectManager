@@ -6,6 +6,12 @@ public class CreateProjectResponse {
 	public int statusCode;
 	public String error;
 	
+//	public CreateProjectResponse(String projectId, String url) {
+//		this.projectId = projectId;
+//		this.url = url;
+//	}
+	
+	// Success
 	public CreateProjectResponse(String projectId, String url, int statusCode) {
 		this.projectId = projectId;
 		this.url = url;
@@ -13,6 +19,7 @@ public class CreateProjectResponse {
 		this.error = "";
 	}
 	
+	// Failure
 	public CreateProjectResponse(int statusCode, String error) {
 		this.projectId = "";
 		this.url = "";
@@ -20,11 +27,11 @@ public class CreateProjectResponse {
 		this.error = error;
 	}
 	
-	public String toString() {
-		if (statusCode == 200) {
-			return "CreateProjectResponse(" + projectId + "," + url + ")";
-		} else {
-			return "Error(" + statusCode + ", err=" + error + ")";
-		}
-	}
+//	public String toString() {
+//		if (statusCode == 200) {
+//			return "CreateProjectResponse(" + projectId + "," + url + ")";
+//		} else {
+//			return "Error(" + statusCode + ", err=" + error + ")";
+//		}
+//	}
 }
