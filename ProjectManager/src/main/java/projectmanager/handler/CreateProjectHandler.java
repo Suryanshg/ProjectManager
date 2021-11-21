@@ -44,10 +44,10 @@ public class CreateProjectHandler implements RequestHandler<CreateProjectRequest
 		CreateProjectResponse response;
 		try {
 			if (createProject(req.getProjectName())) {
-				String url = "www.example.com"; // TODO: need to change this (Generate a new url) 
+				String url = " https://softengproject3733.s3.us-east-2.amazonaws.com/project.html/?project=" + projectId; 
 				response = new CreateProjectResponse(projectId, url, 200);
 			} else {
-				response = new CreateProjectResponse(422, "Project Creation Failed!");
+				response = new CreateProjectResponse(422, "Project Creation Failed! Project with the same name already exists!");
 			}
 
 		} catch (Exception e) {
