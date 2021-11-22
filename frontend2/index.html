@@ -8,7 +8,11 @@
         <script src="js/index/index.js"></script>
     </head>
     <script>
-        var index = new Index($("#projectNameInput"), $("#projectCreationError"), $("#projectCreationSuccess"), $("#projectURL"))
+        var index;
+
+        $(function () {
+            index = new Index($("#projectNameInput"), $("#projectCreationError"), $("#projectCreationSuccess"), $("#projectURL"))
+        })
     </script>
     <body>
         <nav class="navbar navbar-light bg-light">
@@ -37,13 +41,14 @@
             <div class="row" id="projectCreationError" style="display: none">
                 <div class="col s12">
                     <hr>
-                    <p>There was an error creating your project.</p>
+                    <p>There was an error creating your project. <span id="projectCreationErrorDetailed"></span></p>
                 </div>
             </div>
             <div class="row" id="projectCreationSuccess" style="display: none">
                 <div class="col s12">
                     <hr>
-                    <p>Here's your project link: <span id="projectURL"></span></p>
+                    <p>Your project has been made! <br>
+                    You can access your project at <a href="" id="projectURLhref"><span id="projectURL"></span></a>
                 </div>
             </div>
         </div>
