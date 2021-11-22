@@ -11,10 +11,8 @@ class Index {
     }
 
     createProject() {
-        var request = new XMLHttpRequest();
         var data = {"projectName": this.projform.val()}
 
-        console.log(data)
         fetch(this.apiurl + "project/createProject", {
             method: "POST",
             body: JSON.stringify(data)
