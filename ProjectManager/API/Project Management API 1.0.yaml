@@ -25,7 +25,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
+                $ref: '#/components/schemas/ListAllProjectsResponse'
           description: Bad Request
       summary: /admin
       description: Lists all the projects with their current status
@@ -120,13 +120,13 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Project'
+                $ref: '#/components/schemas/ProjectResponse'
           description: Project details have been gathered sucessfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
+                $ref: '#/components/schemas/ProjectResponse'
           description: The project details couldn't be retrieved.
       summary: /project
       description: Lists the project details.
@@ -652,8 +652,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Project'
+        error:
+          description: The Error Message
+          type: string
+        statusCode:
+          description: The status code
+          type: integer
       example:
         projects: []
+        error: ""
+        statusCode: 400
     ArchiveResponse:
       description: Response related to archive operation
       required:
@@ -940,6 +948,19 @@ components:
       example:
         errormessage: An error happened
         statusCode: 400
+    ProjectResponse:
+      description: ""
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/Project'
+          description: ""
+        error:
+          description: ""
+          type: string
+        statusCode:
+          description: ""
+          type: integer
 tags:
 - name: Admin-Only Calls
   description: Calls that can only be performed from the admin panel.
