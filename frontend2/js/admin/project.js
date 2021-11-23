@@ -18,6 +18,7 @@ class Project {
                 <hr>
                 <div class="col s12">
                     <h4>${this.name}</h4>
+                    ID: ${this.projectid}<br>
                     ${this.tasks.length}/${this.tasks.length} tasks complete <br>
                     ${this.teammates.length} teammates <br><br>
                     <button type="button" class="btn btn-warning" onclick="${this.adminvar}.archiveProject('${this.projectid}')" ${archivedtext}>Archive</button>
