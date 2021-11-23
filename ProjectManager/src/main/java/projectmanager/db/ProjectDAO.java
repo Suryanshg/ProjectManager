@@ -51,13 +51,36 @@ public class ProjectDAO {
 		}
 	}
 
-	// Retrieving a Project
-	public Project getProject(String name) throws Exception { // we can search on the basis of name also
+	// Retrieving a Project by name
+	public Project getProject(String name) throws Exception { 
 
 		try {
 			Project project = null;
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Project WHERE name=?;");
 			ps.setString(1,  name);
+			ResultSet resultSet = ps.executeQuery();
+
+			while (resultSet.next()) {
+				project = generateProject(resultSet);
+			}
+			resultSet.close();
+			ps.close();
+
+			return project;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception("Failed in retrieving the project: " + e.getMessage());
+		}
+	}
+	
+	// Retrieving a Project by ID
+	public Project getProjectByID(String id) throws Exception { 
+
+		try {
+			Project project = null;
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Project WHERE id=?;");
+			ps.setString(1,  id);
 			ResultSet resultSet = ps.executeQuery();
 
 			while (resultSet.next()) {
