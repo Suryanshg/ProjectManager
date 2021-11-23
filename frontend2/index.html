@@ -31,15 +31,16 @@
         $("#projectCreationSuccess"),
         $("#projectURL"),
         $("#projectCreationErrorDetailed"),
-        $("#projectURLhref")
+        $("#projectURLhref"),
+        $("#submitButton"),
+        $("#submitButtonSpan")
       );
     });
   </script>
   <body>
-    <nav class="navbar navbar-expand  navbar-light bg-light ms-3">
-        <a class="navbar-brand" href="#">Project Manager</a>
-        <a class="nav-link text-dark" href="./admin.html">Admin</a>
-        </div>
+    <nav class="navbar navbar-expand navbar-light bg-light ms-3">
+      <a class="navbar-brand" href="#">Project Manager</a>
+      <a class="nav-link text-dark" href="./admin.html">Admin</a>
     </nav>
     <div class="container mt-3">
       <div class="row mb-3">
@@ -62,10 +63,11 @@
               </form>
               <button
                 type="submit"
+                id="submitButton"
                 onclick="index.createProject()"
                 class="btn btn-primary"
               >
-                Submit
+                <span id="submitButtonSpan">Submit</span>
               </button>
             </div>
           </div>
@@ -86,7 +88,9 @@
           <p>
             Your project has been made! <br />
             You can access your project at
-            <a href="" id="projectURLhref"><span id="projectURL"></span></a>
+            <a href="" id="projectURLhref" target="_blank"
+              ><span id="projectURL"></span
+            ></a>
           </p>
         </div>
       </div>
