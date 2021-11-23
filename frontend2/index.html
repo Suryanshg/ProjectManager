@@ -11,7 +11,7 @@
         var index;
 
         $(function () {
-            index = new Index($("#projectNameInput"), $("#projectCreationError"), $("#projectCreationSuccess"), $("#projectURL"), $("#projectCreationErrorDetailed"), $("#projectURLhref"))
+            index = new Index($("#projectNameInput"), $("#projectCreationError"), $("#projectCreationSuccess"), $("#projectURL"), $("#projectCreationErrorDetailed"), $("#projectURLhref"), $("#submitButton"), $("#submitButtonSpan"))
         })
     </script>
     <body>
@@ -33,7 +33,7 @@
                                     <input type="text" class="form-control" id="projectNameInput">
                                 </div>
                             </form>
-                            <button type="submit" onclick="index.createProject()" class="btn btn-primary">Submit</button>
+                            <button type="submit" id="submitButton" onclick="index.createProject()" class="btn btn-primary"><span id="submitButtonSpan">Submit</span></button>
                         </div>
                     </div>
                 </div>
