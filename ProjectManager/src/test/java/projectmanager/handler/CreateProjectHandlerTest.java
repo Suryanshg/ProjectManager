@@ -23,13 +23,26 @@ public class CreateProjectHandlerTest extends LambdaTest {
 	}
 
 	@Test
-	public void createProjectTest(){  
-		String SAMPLE_INPUT_STRING = "{\"projectName\": \"test900\" }";
+	public void createProjectTestPasses(){  
+		String SAMPLE_INPUT_STRING = "{\"projectName\": \"test444\" }";
 		int RESULT = 200;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT);
 		} catch(IOException ioe) {
+			Assert.fail("invalid: " + ioe.getMessage());
+		}
+	}
+	
+	
+	@Test
+	public void createProjectTestFails() {
+		String SAMPLE_INPUT_STRING = "{\"projectName\": \"test900\" }";
+		int RESULT = 422;
+		
+		try {
+			testInput(SAMPLE_INPUT_STRING, RESULT);
+		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
 	}

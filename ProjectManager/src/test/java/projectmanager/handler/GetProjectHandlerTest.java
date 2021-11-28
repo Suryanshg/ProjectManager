@@ -1,46 +1,68 @@
 package projectmanager.handler;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
+import java.util.UUID;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.google.gson.Gson;
 
+import projectmanager.http.CreateProjectRequest;
+import projectmanager.http.CreateProjectResponse;
 import projectmanager.http.ProjectRequest;
 import projectmanager.http.ProjectResponse;
+import projectmanager.model.Project;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class GetProjectHandlerTest {
+public class GetProjectHandlerTest extends LambdaTest {
 
-    private static ProjectRequest input;
+	void testInput(String incoming, int outgoing, Project expected) throws IOException {
+		GetProjectHandler handler = new GetProjectHandler();
+		ProjectRequest req = new Gson().fromJson(incoming, ProjectRequest.class);
+		ProjectResponse response = handler.handleRequest(req, createContext("get project"));
 
-    @BeforeClass
-    public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = null;
-    }
+		assertEquals(outgoing, response.statusCode);
+		assertEquals(expected, response.project);
+	}
 
-    private Context createContext() {
-        TestContext ctx = new TestContext();
-
-        // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
-
-        return ctx;
-    }
 
     @Test
-    public void testGetProjectHandler() {
-        GetProjectHandler handler = new GetProjectHandler();
-        Context ctx = createContext();
+    public void testGetProjectHandler200() {
+    	
+    	String testId = "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b";
+    	String testName = "erre";
+    	String SAMPLE_INPUT_STRING = "{\"project\": \"" + testId + "\" }";
+    	
+    	Project testProject = new Project(UUID.fromString(testId), testName);
+		int RESULT = 200;
 
-        ProjectResponse output = handler.handleRequest(input, ctx);
+		try {
+			testInput(SAMPLE_INPUT_STRING, RESULT, testProject);
+			
+		} catch(IOException ioe) {
+			Assert.fail("invalid: " + ioe.getMessage());
+		}
+    }
+    
+    
+    @Test
+    public void testGetProjectHandler422() {
+    	
+    	String testId = "GARBAGE";
+    	String SAMPLE_INPUT_STRING = "{\"project\": \"" + testId + "\" }";
+		int RESULT = 422;
 
-        // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+		try {
+			testInput(SAMPLE_INPUT_STRING, RESULT, null);
+		} catch(IOException ioe) {
+			Assert.fail("invalid: " + ioe.getMessage());
+		}
     }
 }

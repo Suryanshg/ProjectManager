@@ -44,7 +44,7 @@ public class GetProjectHandler implements RequestHandler<ProjectRequest, Project
 			} else {
 				response = new ProjectResponse(422, "No project with the specified id " + req.getProject() + " exists");
 			}
-		} catch (Exception e) {
+		} catch (Exception e) { // TODO: Ask Heineman about covering this block in JUnit testing
 			response = new ProjectResponse(400, "Unable to fetch the project with id " + req.getProject() + "(" + e.getMessage() + ")");
 		}
 

@@ -1,5 +1,7 @@
 package projectmanager.handler;
 
+import static org.junit.Assert.assertEquals;
+
 import java.io.IOException;
 
 import org.junit.Assert;
@@ -7,39 +9,35 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.amazonaws.services.lambda.runtime.Context;
+import com.google.gson.Gson;
 
 import projectmanager.http.ListAllProjectsResponse;
+import projectmanager.http.ProjectRequest;
+import projectmanager.http.ProjectResponse;
 
 /**
  * A simple test harness for locally invoking your Lambda function handler.
  */
-public class ListAllProjectsHandlerTest {
+public class ListAllProjectsHandlerTest extends LambdaTest {
+	
+	void testInput(int outgoing) throws IOException {
+		ListAllProjectsHandler handler = new ListAllProjectsHandler();
+		ListAllProjectsResponse response = handler.handleRequest(new Object(), createContext("list all projects"));
 
-    private static Object input;
+		assertEquals(outgoing, response.statusCode);
+	}
 
-    @BeforeClass
-    public static void createInput() throws IOException {
-        // TODO: set up your sample input object here.
-        input = null;
-    }
 
-    private Context createContext() {
-        TestContext ctx = new TestContext();
-
-        // TODO: customize your context here if needed.
-        ctx.setFunctionName("Your Function Name");
-
-        return ctx;
-    }
 
     @Test
     public void testListAllProjectsHandler() {
-        ListAllProjectsHandler handler = new ListAllProjectsHandler();
-        Context ctx = createContext();
+    	
+		int RESULT = 200;
 
-        ListAllProjectsResponse output = handler.handleRequest(input, ctx);
-
-        // TODO: validate output here if needed.
-        Assert.assertEquals("Hello from Lambda!", output);
+		try {
+			testInput(RESULT);
+		} catch(IOException ioe) {
+			Assert.fail("invalid: " + ioe.getMessage());
+		}
     }
 }
