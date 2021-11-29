@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 import projectmanager.model.Project;
 
 public class ProjectDAO {
@@ -118,6 +119,21 @@ public class ProjectDAO {
 			throw new Exception("Failed in retrieving all projects: " + e.getMessage());
 		}
 	}
+	
+	// Deleting a project by its id
+    public boolean deleteProject(String id) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Project WHERE id = ?;");
+            ps.setString(1, id);
+            int numAffected = ps.executeUpdate();
+            ps.close();
+            
+            return (numAffected == 1);
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete project: " + e.getMessage());
+        }
+    }
 
 
 	// Helper method to generate a project from the retrieved resultSet

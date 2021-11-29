@@ -9,27 +9,34 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
+import projectmanager.db.ProjectDAO;
 import projectmanager.http.CreateProjectRequest;
 import projectmanager.http.CreateProjectResponse;
 
 public class CreateProjectHandlerTest extends LambdaTest {
 
-	void testInput(String incoming, int outgoing) throws IOException {
+	void testInput(String incoming, int outgoing) throws Exception {
 		CreateProjectHandler handler = new CreateProjectHandler();
 		CreateProjectRequest req = new Gson().fromJson(incoming, CreateProjectRequest.class);
 		CreateProjectResponse response = handler.handleRequest(req, createContext("create project"));
 
 		assertEquals(outgoing, response.statusCode);
+		
+		if(response.statusCode == 200) { // Delete the newly created project
+			ProjectDAO dao = new ProjectDAO();
+			dao.deleteProject(response.projectId);
+		}
+		
 	}
 
 	@Test
 	public void createProjectTestPasses(){  
-		String SAMPLE_INPUT_STRING = "{\"projectName\": \"test444\" }";
+		String SAMPLE_INPUT_STRING = "{\"projectName\": \"test60\" }";
 		int RESULT = 200;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT);
-		} catch(IOException ioe) {
+		} catch(Exception ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
 	}
@@ -42,7 +49,7 @@ public class CreateProjectHandlerTest extends LambdaTest {
 		
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT);
-		} catch (IOException ioe) {
+		} catch (Exception ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
 	}
