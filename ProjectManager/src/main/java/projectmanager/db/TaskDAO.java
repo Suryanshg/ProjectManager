@@ -2,6 +2,7 @@ package projectmanager.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.UUID;
 
 import projectmanager.model.Task;
@@ -26,27 +27,30 @@ public class TaskDAO {
           .prepareStatement("SELECT * FROM Task WHERE title = ? AND Project = ?;");
       ps.setString(1, task.title);
       ps.setString(2, projectId);
-      ResultSet resultSet = ps.executeQuery();
 
+      ResultSet resultSet = ps.executeQuery();
       // If the project is already present then return false
+      // resultSet.getString("title");
       while (resultSet.next()) {
+        System.out.println(resultSet.getRow());
         generateTask(resultSet);
         resultSet.close();
         return false;
       }
-
       // Creating a new project
-      ps = conn.prepareStatement(
-          "INSERT INTO TASK (id, title, completed, parentTask, Project, outlineNumber) values(?,?,?);");
+    } catch (Exception e) {
+    }
+    try {
+      PreparedStatement ps = conn.prepareStatement(
+          "INSERT INTO Task (id, title, completed, parentTask, Project, outlineNumber) values(?,?,?,?,?,?);");
       ps.setString(1, task.id.toString());
       ps.setString(2, task.title);
       ps.setBoolean(3, task.completed);
-      ps.setString(4, task.parentTask.toString());
+      ps.setString(4, task.parentTask == null ? null : task.parentTask.id.toString());
       ps.setString(5, projectId);
-      ps.setString(6, task.outlineNumber.toString());
+      ps.setString(6, task.outlineNumber);
       ps.execute();
       return true;
-
     } catch (Exception e) {
       throw new Exception("Failed to insert task: " + e.getMessage());
     }
@@ -56,7 +60,7 @@ public class TaskDAO {
     UUID id = UUID.fromString(resultSet.getString("id"));
     String title = resultSet.getString("title");
     Boolean completed = resultSet.getBoolean("completed");
-    Integer outlineNumber = resultSet.getInt("outlineNumber");
+    String outlineNumber = resultSet.getString("outlineNumber");
     Task parentTask;
     try {
       parentTask = (Task) resultSet.getObject("parentTask"); // assume all task data is present

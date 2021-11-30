@@ -6,7 +6,7 @@ import java.util.UUID;
 public class Task {
 	public final UUID id;
 	public String title;
-	public Integer outlineNumber;
+	public String outlineNumber;
 	public Boolean completed;
 	public ArrayList<Teammate> assignees;
 	public ArrayList<Task> subTasks;
@@ -15,14 +15,14 @@ public class Task {
 	public Task(String title) {
 		this.id = UUID.randomUUID();
 		this.title = title;
-		this.outlineNumber = 0; // TODO is 0 correct?
+		this.outlineNumber = "1";
 		this.completed = false;
 		this.assignees = new ArrayList<Teammate>();
 		this.subTasks = new ArrayList<Task>();
-		this.parentTask = parentTask;
+		this.parentTask = null;
 	}
 
-	public Task(UUID id, String title, Integer outlineNumber, Boolean completed, Task parentTask) {
+	public Task(UUID id, String title, String outlineNumber, Boolean completed, Task parentTask) {
 		this.id = id;
 		this.title = title;
 		this.outlineNumber = outlineNumber;

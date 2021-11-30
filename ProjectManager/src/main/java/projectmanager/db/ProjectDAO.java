@@ -13,7 +13,7 @@ public class ProjectDAO {
 
 	java.sql.Connection conn;
 
-	public ProjectDAO(){
+	public ProjectDAO() {
 
 		try {
 			conn = DatabaseUtil.connect();
@@ -23,7 +23,8 @@ public class ProjectDAO {
 		}
 	}
 
-	// TODO: Need to add more stuff for future iterations and populate the other DAOs.
+	// TODO: Need to add more stuff for future iterations and populate the other
+	// DAOs.
 
 	// Creating a Project
 	public boolean addProject(Project project) throws Exception {
@@ -38,10 +39,12 @@ public class ProjectDAO {
 				resultSet.close();
 				return false;
 			}
-
+		} catch (Exception e) {
+		}
+		try {
 			// Creating a new project
-			ps = conn.prepareStatement("INSERT INTO Project (name,isArchived,id) values(?,?,?);");
-			ps.setString(1,  project.name);
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO Project (name,isArchived,id) values(?,?,?);");
+			ps.setString(1, project.name);
 			ps.setBoolean(2, project.isArchived);
 			ps.setString(3, project.id.toString());
 			ps.execute();
@@ -53,12 +56,12 @@ public class ProjectDAO {
 	}
 
 	// Retrieving a Project by name
-	public Project getProject(String name) throws Exception { 
+	public Project getProject(String name) throws Exception {
 
 		try {
 			Project project = null;
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Project WHERE name=?;");
-			ps.setString(1,  name);
+			ps.setString(1, name);
 			ResultSet resultSet = ps.executeQuery();
 
 			while (resultSet.next()) {
@@ -74,14 +77,14 @@ public class ProjectDAO {
 			throw new Exception("Failed in retrieving the project: " + e.getMessage());
 		}
 	}
-	
+
 	// Retrieving a Project by ID
-	public Project getProjectByID(String id) throws Exception { 
+	public Project getProjectByID(String id) throws Exception {
 
 		try {
 			Project project = null;
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Project WHERE id=?;");
-			ps.setString(1,  id);
+			ps.setString(1, id);
 			ResultSet resultSet = ps.executeQuery();
 
 			while (resultSet.next()) {
@@ -119,31 +122,31 @@ public class ProjectDAO {
 			throw new Exception("Failed in retrieving all projects: " + e.getMessage());
 		}
 	}
-	
+
 	// Deleting a project by its id
-    public boolean deleteProject(String id) throws Exception {
-        try {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM Project WHERE id = ?;");
-            ps.setString(1, id);
-            int numAffected = ps.executeUpdate();
-            ps.close();
-            
-            return (numAffected == 1);
-            
-            // TODO: Need to add code to delete the records linked to the deleted project in the Teammate and Task table
+	public boolean deleteProject(String id) throws Exception {
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM Project WHERE id = ?;");
+			ps.setString(1, id);
+			int numAffected = ps.executeUpdate();
+			ps.close();
 
-        } catch (Exception e) {
-            throw new Exception("Failed to delete project: " + e.getMessage());
-        }
-    }
+			return (numAffected == 1);
 
+			// TODO: Need to add code to delete the records linked to the deleted project in
+			// the Teammate and Task table
+
+		} catch (Exception e) {
+			throw new Exception("Failed to delete project: " + e.getMessage());
+		}
+	}
 
 	// Helper method to generate a project from the retrieved resultSet
 	private Project generateProject(ResultSet resultSet) throws Exception {
 		UUID id = UUID.fromString(resultSet.getString("id"));
 		String name = resultSet.getString("name");
 		boolean isArchived = resultSet.getBoolean("isArchived"); // Setting up the isArchived
-		Project project = new Project(id,name,isArchived);
+		Project project = new Project(id, name, isArchived);
 		// TODO: Add DAO related code for retrieving related Teammates and Tasks
 
 		return project;
