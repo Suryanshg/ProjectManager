@@ -129,6 +129,8 @@ public class ProjectDAO {
             ps.close();
             
             return (numAffected == 1);
+            
+            // TODO: Need to add code to delete the records linked to the deleted project in the Teammate and Task table
 
         } catch (Exception e) {
             throw new Exception("Failed to delete project: " + e.getMessage());

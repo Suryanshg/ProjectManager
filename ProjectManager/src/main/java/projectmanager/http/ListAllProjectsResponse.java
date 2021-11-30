@@ -10,12 +10,14 @@ public class ListAllProjectsResponse {
 	public int statusCode;
 	public List<Project> projects;
 	
+	// Success
 	public ListAllProjectsResponse(List<Project> projects, int statusCode) {
 		this.projects  = projects;
 		this.statusCode = statusCode;
 		this.error = "";
 	}
 	
+	// Failure
 	public ListAllProjectsResponse(int statusCode, String error) {
 		this.projects = new ArrayList<Project>();
 		this.statusCode = statusCode;
