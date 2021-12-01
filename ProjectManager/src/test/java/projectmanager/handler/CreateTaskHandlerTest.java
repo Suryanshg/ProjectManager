@@ -19,6 +19,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 		CreateTaskRequest req = new Gson().fromJson(incoming, CreateTaskRequest.class);
 		CreateTaskResponse response = handler.handleRequest(req, createContext("create task"));
 		assertEquals(outgoing, response.statusCode);
+		// TODO: Add code delete the newly created task
 	}
 
 	@Test
