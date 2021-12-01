@@ -37,7 +37,7 @@ public class CreateTaskRequest {
 		return this.projectid;
 	}
 
-	public void setProjectId(String projectid) {
+	public void setProjectid(String projectid) {
 		this.projectid = projectid;
 	}
 
@@ -50,6 +50,6 @@ public class CreateTaskRequest {
 	}
 
 	public String toString() {
-		return "CreateTaskRequest(" + title + ")";
+		return "CreateTaskRequest(" + title + " " + projectid + " " + parentTask + ")";
 	}
 }
