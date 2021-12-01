@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
+import projectmanager.db.TaskDAO;
 import projectmanager.http.CreateTaskRequest;
 import projectmanager.http.CreateTaskResponse;
 import projectmanager.model.Task;
@@ -21,6 +22,17 @@ public class CreateTaskHandlerTest extends LambdaTest {
 		CreateTaskResponse response = handler.handleRequest(req, createContext("create task"));
 		assertEquals(outgoing, response.statusCode);
 		return response.task;
+	}
+
+	void deleteTask(String id) throws IOException {
+		TaskDAO dao = new TaskDAO();
+		Boolean result;
+		try {
+			result = dao.deleteTask(id);
+			assertEquals(result, true);
+		} catch (Exception e) {
+			assertEquals(false, true); // always fails
+		}
 	}
 
 	@Test
