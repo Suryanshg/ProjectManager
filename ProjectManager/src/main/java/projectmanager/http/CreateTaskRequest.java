@@ -6,23 +6,23 @@ package projectmanager.http;
  */
 public class CreateTaskRequest {
 	String title;
-	String projectId;
-	String parentId;
+	String projectid;
+	String parentTask;
 
 	// No-args constructor
 	public CreateTaskRequest() {
 	}
 
-	public CreateTaskRequest(String title, String projectId, String parentId) {
+	public CreateTaskRequest(String title, String projectid, String parentTask) {
 		this.title = title;
-		this.projectId = projectId;
-		this.parentId = parentId;
+		this.projectid = projectid;
+		this.parentTask = parentTask;
 	}
 
-	public CreateTaskRequest(String title, String projectId) {
+	public CreateTaskRequest(String title, String projectid) {
 		this.title = title;
-		this.projectId = projectId;
-		this.parentId = null;
+		this.projectid = projectid;
+		this.parentTask = null;
 	}
 
 	public String getTitle() {
@@ -33,20 +33,20 @@ public class CreateTaskRequest {
 		this.title = title;
 	}
 
-	public String getProjectId() {
-		return this.projectId;
+	public String getProjectid() {
+		return this.projectid;
 	}
 
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
+	public void setProjectId(String projectid) {
+		this.projectid = projectid;
 	}
 
-	public String getParentId() {
-		return this.parentId;
+	public String getParentTask() {
+		return this.parentTask;
 	}
 
-	public void setParentId(String parentId) {
-		this.parentId = parentId;
+	public void setParentTask(String parentTask) {
+		this.parentTask = parentTask;
 	}
 
 	public String toString() {

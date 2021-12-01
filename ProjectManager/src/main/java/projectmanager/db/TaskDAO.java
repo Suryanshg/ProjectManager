@@ -2,7 +2,8 @@ package projectmanager.db;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.UUID;
 
 import projectmanager.model.Task;
@@ -11,7 +12,6 @@ public class TaskDAO {
   java.sql.Connection conn;
 
   public TaskDAO() {
-
     try {
       conn = DatabaseUtil.connect();
     } catch (Exception e) {
@@ -21,36 +21,52 @@ public class TaskDAO {
   }
 
   // Creating a Project
-  public boolean addTask(Task task, String projectId) throws Exception {
+  public Task addTask(Task task) throws Exception {
     try {
+      String statement = String.format("SELECT * FROM Task WHERE title = ? AND parentTask %s ? AND Project %s ?;",
+          task.parentTask == null ? "IS" : "=", task.projectid == null ? "IS" : "=");
       PreparedStatement ps = conn
-          .prepareStatement("SELECT * FROM Task WHERE title = ? AND Project = ?;");
+          .prepareStatement(statement);
       ps.setString(1, task.title);
-      ps.setString(2, projectId);
+      if (task.parentTask != null)
+        ps.setString(2, task.parentTask);
+      else
+        ps.setNull(2, Types.NULL);
+
+      if (task.projectid != null)
+        ps.setString(3, task.projectid);
+      else
+        ps.setNull(3, Types.NULL);
 
       ResultSet resultSet = ps.executeQuery();
       // If the project is already present then return false
       // resultSet.getString("title");
       while (resultSet.next()) {
-        System.out.println(resultSet.getRow());
-        generateTask(resultSet);
         resultSet.close();
-        return false;
+        return null;
       }
       // Creating a new project
     } catch (Exception e) {
     }
     try {
       PreparedStatement ps = conn.prepareStatement(
-          "INSERT INTO Task (id, title, completed, parentTask, Project, outlineNumber) values(?,?,?,?,?,?);");
+          "INSERT INTO Task (id, title, completed, parentTask, Project, outlineNumber) values(?,?,?,?,?,?);",
+          Statement.RETURN_GENERATED_KEYS);
       ps.setString(1, task.id.toString());
       ps.setString(2, task.title);
       ps.setBoolean(3, task.completed);
-      ps.setString(4, task.parentTask == null ? null : task.parentTask.id.toString());
-      ps.setString(5, projectId);
+      if (task.parentTask != null)
+        ps.setString(4, task.parentTask);
+      else
+        ps.setNull(4, Types.NULL);
+      if (task.projectid != null)
+        ps.setString(5, task.projectid);
+      else
+        ps.setNull(5, Types.NULL);
       ps.setString(6, task.outlineNumber);
       ps.execute();
-      return true;
+      return task;
+
     } catch (Exception e) {
       throw new Exception("Failed to insert task: " + e.getMessage());
     }
@@ -61,13 +77,10 @@ public class TaskDAO {
     String title = resultSet.getString("title");
     Boolean completed = resultSet.getBoolean("completed");
     String outlineNumber = resultSet.getString("outlineNumber");
-    Task parentTask;
-    try {
-      parentTask = (Task) resultSet.getObject("parentTask"); // assume all task data is present
-    } catch (Exception e) {
-      parentTask = null;
-    }
-    Task task = new Task(id, title, outlineNumber, completed, parentTask);
+    String parent = resultSet.getString("parent");
+    String projectId = resultSet.getString("projectid");
+
+    Task task = new Task(id, title, outlineNumber, completed, parent, projectId);
 
     return task;
   }

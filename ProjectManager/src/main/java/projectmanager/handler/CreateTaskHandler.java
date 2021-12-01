@@ -15,7 +15,7 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 
 	String taskId;
 
-	public boolean createTask(String taskName, String projectId) throws Exception {
+	public Task createTask(String taskName, String parentTask, String projectid) throws Exception {
 		if (logger != null) {
 			logger.log("in createTask");
 		}
@@ -24,16 +24,15 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 		if (logger != null) {
 			logger.log("in createTask, retrieved the DAO");
 		}
-		Task task = new Task(taskName);
-
-		boolean result = dao.addTask(task, projectId);
+		Task task = new Task(taskName, parentTask, projectid);
+		Task result = dao.addTask(task);
 
 		if (logger != null) {
 			logger.log("in createTask, fetched the result");
 		}
 
-		if (result) {
-			this.taskId = task.id.toString();
+		if (result != null) {
+			this.taskId = result.id.toString();
 		}
 
 		return result;
@@ -47,8 +46,9 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 
 		CreateTaskResponse response;
 		try {
-			if (createTask(req.getTitle(), req.getProjectId())) {
-				response = new CreateTaskResponse(taskId, 200);
+			Task t = createTask(req.getTitle(), req.getParentTask(), req.getProjectid());
+			if (t != null) {
+				response = new CreateTaskResponse(t, 200);
 			} else {
 				response = new CreateTaskResponse(422,
 						"Task Creation Failed! Task with the same name/project combination already exists!");
