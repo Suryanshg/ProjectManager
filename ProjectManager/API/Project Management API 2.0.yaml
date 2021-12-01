@@ -2,7 +2,7 @@
 openapi: 3.0.2
 info:
   title: Project Management API
-  version: 1.0.0
+  version: 1.0.2
   contact: {}
   license:
     name: Apache 2.0
@@ -146,19 +146,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/TasksResponse'
           description: The tasks were returned successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The tasks couldn't be returned successfully.
+                $ref: '#/components/schemas/TasksResponse'
           description: The tasks couldn't be returned successfully.
       summary: /project/tasks
       description: Gets the tasks in the project.
@@ -178,19 +172,13 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Teammate'
+                $ref: '#/components/schemas/TeammatesResponse'
           description: The list of teammates has been returned successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The list of teammates couldn't be returned successfully.
+                $ref: '#/components/schemas/TeammatesResponse'
           description: The list of teammates couldn't be returned successfully.
       summary: /project/teammates
       description: Lists all the teammates in the project.
@@ -209,21 +197,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              examples:
-                Example:
-                  value:
-                    status: The teammate was assigned to the project successfully.
+                $ref: '#/components/schemas/AssignTeammateResponse'
           description: The teammate was assigned to the task successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The teammate couldn't be assigned to the task.
+                $ref: '#/components/schemas/AssignTeammateResponse'
           description: The teammate couldn't be assigned to the task.
       summary: /project/tasks/assignTeammate
       description: Assign a teammate to a task.
@@ -242,21 +222,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              examples:
-                Example:
-                  value:
-                    status: The teammate was unassigned from the task successfully.
+                $ref: '#/components/schemas/UnassignTeammateResponse'
           description: The teammate was unassigned from the task successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The teammate was unable to be unassigned from the task.
+                $ref: '#/components/schemas/UnassignTeammateResponse'
           description: The teammate was unable to be unassigned from the task.
       summary: /project/tasks/unassignTeammate
       description: Unassigns a teammate from a task.
@@ -275,21 +247,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              examples:
-                Example:
-                  value:
-                    status: The task was assigned successfully.
+                $ref: '#/components/schemas/AssignTaskResponse'
           description: The task was assigned successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The task was not assigned successfully.
+                $ref: '#/components/schemas/AssignTaskResponse'
           description: The task wasn't assigned successfully.
       summary: /project/teammates/assignTask
       description: Assign a task to a teammate.
@@ -308,21 +272,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              examples:
-                Example:
-                  value:
-                    status: The task was unassigned successfully.
+                $ref: '#/components/schemas/UnassignTaskResponse'
           description: The task was unassigned successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The task was not able to be unassigned.
+                $ref: '#/components/schemas/UnassignTaskResponse'
           description: The task wasn't able to be unassigned.
       summary: /project/teammates/unassignTask
       description: Unassigns a task from a teammate.
@@ -348,45 +304,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateTaskResponse'
-              examples:
-                Example:
-                  value:
-                    status: The task was unable to be created successfully.
           description: The task was unable to be created successfully.
       summary: /project/tasks/createTask
       description: Creates a task.
-  /project/tasks/deleteTask:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DeleteTaskRequest'
-      tags:
-      - Project Calls
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                type: string
-              examples:
-                Example:
-                  value:
-                    status: The task was deleted successfully.
-          description: The task was deleted successfully.
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The task was unable to be deleted.
-          description: The task was unable to be deleted.
-      summary: /project/tasks/deleteTask
-      description: Deletes a task.
   /project/tasks/updateTask:
     post:
       requestBody:
@@ -402,21 +322,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              examples:
-                Example:
-                  value:
-                    status: The task was updated successfully.
+                $ref: '#/components/schemas/UpdateTaskResponse'
           description: The task was updated successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The task couldn't be updated.
+                $ref: '#/components/schemas/UpdateTaskResponse'
           description: The task couldn't be updated.
       summary: /project/tasks/updateTask
       description: Updates a task's parameters.
@@ -442,10 +354,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CreateTeammateResponse'
-              examples:
-                Example:
-                  value:
-                    status: The teammate was not created successfully.
           description: The teammate wasn't created successfully.
       summary: /project/teammates/createTeammate
       description: Creates a teammate.
@@ -464,21 +372,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              examples:
-                Example:
-                  value:
-                    status: The teammate was deleted successfully.
+                $ref: '#/components/schemas/DeleteTeammateResponse'
           description: The teammate was deleted successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The teammate was not deleted successfully.
+                $ref: '#/components/schemas/DeleteTeammateResponse'
           description: The teammate wasn't deleted successfully.
       summary: /project/teammates/deleteTeammate
   /project/teammates/updateTeammate:
@@ -496,21 +396,13 @@ paths:
           content:
             application/json:
               schema:
-                type: string
-              examples:
-                Example:
-                  value:
-                    status: The teammate was updated successfully.
+                $ref: '#/components/schemas/UpdateTeammateResponse'
           description: The teammate was updated successfully.
         "400":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericErrorResponse'
-              examples:
-                Example:
-                  value:
-                    status: The teammate was not updated successfully.
+                $ref: '#/components/schemas/UpdateTeammateResponse'
           description: The teammate wasn't updated successfully.
       summary: /project/teammates/updateTeammate
       description: Updates a teammate.
@@ -772,55 +664,23 @@ components:
       description: ""
       required:
       - statusCode
-      - taskid
       - error
+      - task
       type: object
       properties:
-        taskid:
-          description: The ID of the new task that was created.
-          type: string
         statusCode:
           description: status Code
           type: integer
         error:
           description: error message
           type: string
+        task:
+          $ref: '#/components/schemas/Task'
+          description: the newly created Task
       example:
-        taskid: ""
+        task: ""
         error: ""
         statusCode: 200
-    DeleteTaskRequest:
-      title: Root Type for DeleteTaskRequest
-      description: ""
-      required:
-      - taskid
-      type: object
-      properties:
-        taskid:
-          description: The ID of the task to be deleted.
-          type: string
-      example:
-        taskid: ""
-    ModifyTaskRequest:
-      title: Root Type for ModifyTaskRequest
-      description: ""
-      required:
-      - taskid
-      type: object
-      properties:
-        taskid:
-          type: string
-        parent:
-          $ref: '#/components/schemas/Task'
-        completed:
-          type: boolean
-        name:
-          type: string
-      example:
-        taskid: ""
-        parent: ""
-        completed: false
-        name: ""
     AssignTeammateRequest:
       title: Root Type for AssignTeammateRequest
       description: ""
@@ -838,22 +698,6 @@ components:
       example:
         teammate: ""
         task: ""
-    GenericErrorResponse:
-      description: General Error Response for all 400s
-      required:
-      - errorMessage
-      - statusCode
-      type: object
-      properties:
-        errorMessage:
-          description: The error message of what happened
-          type: string
-        statusCode:
-          description: Status code of the error
-          type: integer
-      example:
-        errormessage: An error happened
-        statusCode: 400
     ProjectResponse:
       description: ""
       type: object
@@ -890,20 +734,20 @@ components:
       required:
       - statusCode
       - error
-      - teammateid
+      - teammate
       type: object
       properties:
-        teammateid:
-          description: The ID of the teammate created.
-          type: string
         statusCode:
           description: status code
           type: integer
         error:
           description: error message
           type: string
+        teammate:
+          $ref: '#/components/schemas/Teammate'
+          description: The newly created teammate
       example:
-        teammateid: ""
+        teammate: ""
         error: ""
         statusCode: 200
     DeleteTeammateRequest:
@@ -1010,6 +854,135 @@ components:
       example:
         taskid: ""
         teammateid: ""
+    TasksResponse:
+      description: Gets the tasks related to a particular project
+      required:
+      - tasks
+      - statusCode
+      - error
+      type: object
+      properties:
+        tasks:
+          description: List of tasks
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    AssignTeammateResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: Error message
+          type: string
+    UnassignTeammateResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: 'error message       '
+          type: string
+    UpdateTaskResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    TeammatesResponse:
+      description: ""
+      required:
+      - teammates
+      - statusCode
+      - error
+      type: object
+      properties:
+        teammates:
+          description: List of teammates dedicated to a project
+          type: array
+          items:
+            $ref: '#/components/schemas/Teammate'
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    AssignTaskResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    DeleteTeammateResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    UnassignTaskResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    UpdateTeammateResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
 tags:
 - name: Admin-Only Calls
   description: Calls that can only be performed from the admin panel.
