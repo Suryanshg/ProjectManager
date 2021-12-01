@@ -148,6 +148,10 @@ public class ProjectDAO {
 		boolean isArchived = resultSet.getBoolean("isArchived"); // Setting up the isArchived
 		Project project = new Project(id, name, isArchived);
 		// TODO: Add DAO related code for retrieving related Teammates and Tasks
+		TaskDAO taskDao = new TaskDAO();
+		
+		// Adding the tasks related to this project
+		project.tasks = taskDao.getTasksByProject(project.id.toString());
 
 		return project;
 	}

@@ -1,13 +1,14 @@
 package projectmanager.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Project {
 	public final UUID id;
 	public final String name;
-	public ArrayList<Task> tasks;
-	public ArrayList<Teammate> teammates;
+	public List<Task> tasks;
+	public List<Teammate> teammates;
 	public boolean isArchived;
 	
 	public Project(String name) {

@@ -1,6 +1,7 @@
 package projectmanager.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Task {
@@ -8,8 +9,8 @@ public class Task {
 	public String title;
 	public String outlineNumber;
 	public Boolean completed;
-	public ArrayList<Teammate> assignees;
-	public ArrayList<Task> subTasks;
+	public List<Teammate> assignees;
+	public List<Task> subTasks;
 	public Task parentTask;
 
 	public Task(String title) {
@@ -22,14 +23,14 @@ public class Task {
 		this.parentTask = null;
 	}
 
-	public Task(UUID id, String title, String outlineNumber, Boolean completed, Task parentTask) {
+	public Task(UUID id, String title, String outlineNumber, Boolean completed) {
 		this.id = id;
 		this.title = title;
 		this.outlineNumber = outlineNumber;
 		this.completed = completed;
 		this.assignees = new ArrayList<Teammate>();
 		this.subTasks = new ArrayList<Task>();
-		this.parentTask = parentTask;
+		this.parentTask = null;
 	}
 
 	public void addTeammate(Teammate teammate) {

@@ -1,12 +1,13 @@
 package projectmanager.model;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Teammate {
 	public final UUID id;
 	public final String name;
-	public ArrayList<Task> tasks;
+	public List<Task> tasks;
 	
 	public Teammate(String name) {
 		this.id = UUID.randomUUID();
