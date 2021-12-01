@@ -1,11 +1,9 @@
 package projectmanager.http;
 
-import java.util.Map;
-
 import projectmanager.model.Task;
 
 public class CreateTaskResponse {
-	public Map<String, Object> task;
+	public Task task;
 	public int statusCode;
 	public String error;
 
@@ -16,7 +14,7 @@ public class CreateTaskResponse {
 
 	// Success
 	public CreateTaskResponse(Task task, int statusCode) {
-		this.task = task.getResponseMap();
+		this.task = task;
 		this.statusCode = statusCode;
 		this.error = "";
 	}

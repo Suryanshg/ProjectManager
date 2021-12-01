@@ -3,7 +3,6 @@ package projectmanager.handler;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -12,10 +11,11 @@ import com.google.gson.Gson;
 
 import projectmanager.http.CreateTaskRequest;
 import projectmanager.http.CreateTaskResponse;
+import projectmanager.model.Task;
 
 public class CreateTaskHandlerTest extends LambdaTest {
 
-	Map<String, Object> testInput(String incoming, int outgoing) throws IOException {
+	Task testInput(String incoming, int outgoing) throws IOException {
 		CreateTaskHandler handler = new CreateTaskHandler();
 		CreateTaskRequest req = new Gson().fromJson(incoming, CreateTaskRequest.class);
 		CreateTaskResponse response = handler.handleRequest(req, createContext("create task"));
@@ -25,7 +25,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 
 	@Test
 	public void createTaskTestPasses() {
-		String title = "test13";
+		String title = "test134";
 		String projectid = "107d139a-9a1d-42e3-9f59-b61a93e6c7a3";
 		String parentTask = "043d4745-8056-4ba0-a436-0fe954883341";
 		String SAMPLE_INPUT_STRING = "{\"title\": \"" + title + "\",\"projectid\": \"" + projectid
@@ -33,10 +33,9 @@ public class CreateTaskHandlerTest extends LambdaTest {
 		int RESULT = 200;
 
 		try {
-			Map<String, Object> task = testInput(SAMPLE_INPUT_STRING, RESULT);
-			assertEquals(task.get("title"), title);
-			assertEquals(task.get("projectid"), projectid);
-			assertEquals(task.get("parentTask"), parentTask);
+			Task task = testInput(SAMPLE_INPUT_STRING, RESULT);
+			assertEquals(task.title, title);
+			deleteTask(task.id.toString());
 		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}

@@ -21,20 +21,20 @@ public class TaskDAO {
   }
 
   // Creating a Project
-  public Task addTask(Task task) throws Exception {
+  public Boolean addTask(Task task, String parentTask, String projectid) throws Exception {
     try {
       String statement = String.format("SELECT * FROM Task WHERE title = ? AND parentTask %s ? AND Project %s ?;",
-          task.parentTask == null ? "IS" : "=", task.projectid == null ? "IS" : "=");
+          parentTask == null ? "IS" : "=", projectid == null ? "IS" : "=");
       PreparedStatement ps = conn
           .prepareStatement(statement);
       ps.setString(1, task.title);
-      if (task.parentTask != null)
-        ps.setString(2, task.parentTask);
+      if (parentTask != null)
+        ps.setString(2, parentTask);
       else
         ps.setNull(2, Types.NULL);
 
-      if (task.projectid != null)
-        ps.setString(3, task.projectid);
+      if (projectid != null)
+        ps.setString(3, projectid);
       else
         ps.setNull(3, Types.NULL);
 
@@ -43,7 +43,7 @@ public class TaskDAO {
       // resultSet.getString("title");
       while (resultSet.next()) {
         resultSet.close();
-        return null;
+        return false;
       }
       // Creating a new project
     } catch (Exception e) {
@@ -55,20 +55,33 @@ public class TaskDAO {
       ps.setString(1, task.id.toString());
       ps.setString(2, task.title);
       ps.setBoolean(3, task.completed);
-      if (task.parentTask != null)
-        ps.setString(4, task.parentTask);
+      if (parentTask != null)
+        ps.setString(4, parentTask);
       else
         ps.setNull(4, Types.NULL);
-      if (task.projectid != null)
-        ps.setString(5, task.projectid);
+      if (projectid != null)
+        ps.setString(5, projectid);
       else
         ps.setNull(5, Types.NULL);
       ps.setString(6, task.outlineNumber);
       ps.execute();
-      return task;
+      return true;
 
     } catch (Exception e) {
       throw new Exception("Failed to insert task: " + e.getMessage());
+    }
+  }
+
+  public boolean deleteTask(String id) throws Exception {
+    try {
+      PreparedStatement ps = conn.prepareStatement("DELETE FROM Task WHERE id = ?;");
+      ps.setString(1, id);
+      int numAffected = ps.executeUpdate();
+      ps.close();
+      return (numAffected == 1);
+
+    } catch (Exception e) {
+      throw new Exception("Failed to delete project: " + e.getMessage());
     }
   }
 
@@ -77,11 +90,13 @@ public class TaskDAO {
     String title = resultSet.getString("title");
     Boolean completed = resultSet.getBoolean("completed");
     String outlineNumber = resultSet.getString("outlineNumber");
-    String parent = resultSet.getString("parent");
-    String projectId = resultSet.getString("projectid");
+    // String parent = resultSet.getString("Parent");
+    // String projectId = resultSet.getString("projectid");
 
-    Task task = new Task(id, title, outlineNumber, completed, parent, projectId);
+    // TODO implement this later
+    // Task task = new Task(id, title, outlineNumber, completed);
+    // return task;
 
-    return task;
+    return null;
   }
 }
