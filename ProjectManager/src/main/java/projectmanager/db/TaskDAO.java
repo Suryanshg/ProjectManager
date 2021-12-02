@@ -52,7 +52,21 @@ public class TaskDAO {
 		} catch (Exception e) {
 		}
 		try {
-			PreparedStatement ps = conn.prepareStatement(
+			String statement = String.format("SELECT count(*) AS count FROM Task WHERE parentTask %s ?;",
+					parentTask == null ? "IS" : "=", projectid == null ? "IS" : "=");
+			PreparedStatement ps = conn
+					.prepareStatement(statement);
+			if (parentTask != null)
+				ps.setString(1, parentTask);
+			else
+				ps.setNull(1, Types.NULL);
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				task.outlineNumber = String.valueOf(resultSet.getInt("count") + 1);
+				resultSet.close();
+				break;
+			}
+			ps = conn.prepareStatement(
 					"INSERT INTO Task (id, title, completed, parentTask, Project, outlineNumber) values(?,?,?,?,?,?);",
 					Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, task.id.toString());
@@ -89,12 +103,13 @@ public class TaskDAO {
 	}
 
 	// Retrieves the top level tasks for a project
-	public List<Task> getTasksByProject(String projectid) throws Exception{
+	public List<Task> getTasksByProject(String projectid) throws Exception {
 
 		List<Task> tasks = new ArrayList<Task>();
 
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Task WHERE Project = ? and parentTask is NULL ");
+			PreparedStatement ps = conn
+					.prepareStatement("SELECT * AS count FROM Task WHERE Project = ? and parentTask is NULL ");
 			ps.setString(1, projectid);
 			ResultSet resultSet = ps.executeQuery();
 
@@ -112,7 +127,7 @@ public class TaskDAO {
 	}
 
 	// Retrieves the child tasks for a Task
-	public List<Task> getTasksByParent(String parentId) throws Exception{
+	public List<Task> getTasksByParent(String parentId) throws Exception {
 
 		List<Task> tasks = new ArrayList<Task>();
 
@@ -134,8 +149,7 @@ public class TaskDAO {
 		}
 	}
 
-
-	// Helper function to generate a Task 
+	// Helper function to generate a Task
 	private Task generateTask(ResultSet resultSet) throws Exception {
 		System.out.println("in generateTask");
 		UUID id = UUID.fromString(resultSet.getString("id"));
@@ -146,14 +160,13 @@ public class TaskDAO {
 		Task task = new Task(id, title, outlineNumber, completed);
 
 		String parentId = resultSet.getString("parentTask");
-		//    String projectId = resultSet.getString("Project");
+		// String projectId = resultSet.getString("Project");
 
 		// Setting up the subTasks
-		List<Task> subTasks = getTasksByParent(id.toString());    
+		List<Task> subTasks = getTasksByParent(id.toString());
 		task.subTasks = subTasks;
 
 		// TODO: Set up the assignees
-
 
 		return task;
 	}
