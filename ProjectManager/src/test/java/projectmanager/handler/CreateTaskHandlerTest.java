@@ -21,6 +21,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 		CreateTaskRequest req = new Gson().fromJson(incoming, CreateTaskRequest.class);
 		CreateTaskResponse response = handler.handleRequest(req, createContext("create task"));
 		assertEquals(outgoing, response.statusCode);
+//		System.out.println(response.error);
 		return response.task;
 	}
 
@@ -39,9 +40,9 @@ public class CreateTaskHandlerTest extends LambdaTest {
 	public void createTaskTestPasses() {
 		String title = "test134";
 		String projectid = "107d139a-9a1d-42e3-9f59-b61a93e6c7a3";
-		String parentTask = "043d4745-8056-4ba0-a436-0fe954883341";
+		String parentTask = null;
 		String SAMPLE_INPUT_STRING = "{\"title\": \"" + title + "\",\"projectid\": \"" + projectid
-				+ "\", \"parentTask\": \"" + parentTask + "\"}";
+				+ "\", \"parentTask\": " + parentTask + "}";
 		int RESULT = 200;
 
 		try {
@@ -54,12 +55,18 @@ public class CreateTaskHandlerTest extends LambdaTest {
 	}
 
 	@Test
-	public void createTaskTestFails() {
+	public void createTaskTestFails() throws Exception {
+		// Let's create a Task with the same title and projectid in the DB
+		TaskDAO dao = new TaskDAO();
+		Task task = new Task("testFail");
+		dao.addTask(task, null, "107d139a-9a1d-42e3-9f59-b61a93e6c7a3" );
+		
 		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"projectid\": \"107d139a-9a1d-42e3-9f59-b61a93e6c7a3\"}";
 		int RESULT = 422;
 
 		try {
-			testInput(SAMPLE_INPUT_STRING, RESULT);
+			testInput(SAMPLE_INPUT_STRING, RESULT);	
+			dao.deleteTask(task.id.toString());
 		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
