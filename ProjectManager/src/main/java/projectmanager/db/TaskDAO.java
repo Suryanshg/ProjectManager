@@ -90,6 +90,7 @@ public class TaskDAO {
   
   // Retrieves the top level tasks for a project
   public List<Task> getTasksByProject(String projectid) throws Exception{
+	  System.out.println("in getTasksByProject");
 	  List<Task> tasks = new ArrayList<Task>();
 	 
 	  try {
@@ -112,12 +113,15 @@ public class TaskDAO {
   
   // Retrieves the child tasks for a Task
   public List<Task> getTasksByParent(String parentId) throws Exception{
+	  System.out.println("in getTasksByParent");
 	  List<Task> tasks = new ArrayList<Task>();
 	  
 	  try {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Task WHERE parentTask = ? ");
 			ps.setString(1, parentId);
 			ResultSet resultSet = ps.executeQuery();
+			
+			System.out.println(resultSet.next()); // This is coming out to be false, need to debug this as on MS SQL workbench, the Query works fine.
 
 			while (resultSet.next()) {
 				Task t = generateTask(resultSet);
@@ -135,6 +139,7 @@ public class TaskDAO {
 
   // Helper function to generate a Task 
   private Task generateTask(ResultSet resultSet) throws Exception {
+	System.out.println("in generateTask");
     UUID id = UUID.fromString(resultSet.getString("id"));
     String title = resultSet.getString("title");
     Boolean completed = resultSet.getBoolean("completed");
