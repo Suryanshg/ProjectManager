@@ -1,4 +1,61 @@
 package projectmanager.handler;
 
-public class CreateTeammateHandler {
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+
+import projectmanager.db.ProjectDAO;
+import projectmanager.db.TeammateDAO;
+import projectmanager.http.CreateProjectRequest;
+import projectmanager.http.CreateProjectResponse;
+import projectmanager.http.CreateTeammateRequest;
+import projectmanager.http.CreateTeammateResponse;
+import projectmanager.model.Project;
+import projectmanager.model.Teammate;
+
+public class CreateTeammateHandler implements RequestHandler<CreateTeammateRequest, CreateTeammateResponse> {
+
+    LambdaLogger logger;
+
+    String teammateId;
+
+    public boolean createTeammate(String name, String projectid) throws Exception{
+        if (logger != null) { logger.log("in createTeammate"); }
+        TeammateDAO dao = new TeammateDAO();
+
+        if (logger != null) { logger.log("in createTeammate, retrieved the DAO"); }
+        Teammate teammate = new Teammate(name);
+
+        boolean result = dao.addTeammate(teammate, projectid);
+
+        if (logger != null) { logger.log("in createTeammate, fetched the result"); }
+
+        if (result) {
+            teammateId = teammate.id.toString();
+        }
+
+        return result;
+    }
+
+    @Override
+    public CreateTeammateResponse handleRequest(CreateTeammateRequest req, Context context) {
+        logger = context.getLogger();
+        logger.log("Loading Java Lambda handler of CreateProjectHandler");
+        logger.log(req.toString());
+
+        CreateTeammateResponse response;
+        try {
+            if (createTeammate(req.getName(), req.getProjectId())) {
+                response = new CreateTeammateResponse("Teammate created successfully.", 200, teammateId);
+            } else {
+                response = new CreateTeammateResponse("Project Creation Failed! Project with the same name already exists!", 422);
+            }
+
+        } catch (Exception e) {
+            response = new CreateTeammateResponse("Unable to create Teammate: " + req.getName() + "(" + e.getMessage() + ")", 400);
+        }
+
+        return response;
+    }
+
 }
