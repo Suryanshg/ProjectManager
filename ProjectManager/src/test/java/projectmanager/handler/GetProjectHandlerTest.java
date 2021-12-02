@@ -30,8 +30,6 @@ public class GetProjectHandlerTest extends LambdaTest {
 
 		assertEquals(outgoing, response.statusCode);
 		assertEquals(expected, response.project);
-		
-//		System.out.println(response.toString());
 	}
 
 

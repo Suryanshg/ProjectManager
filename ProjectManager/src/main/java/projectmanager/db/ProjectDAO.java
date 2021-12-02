@@ -143,7 +143,7 @@ public class ProjectDAO {
 
 	// Helper method to generate a project from the retrieved resultSet
 	private Project generateProject(ResultSet resultSet) throws Exception {
-		System.out.println("in generateProject");
+//		System.out.println("in generateProject");
 		UUID id = UUID.fromString(resultSet.getString("id"));
 		String name = resultSet.getString("name");
 		boolean isArchived = resultSet.getBoolean("isArchived"); // Setting up the isArchived
