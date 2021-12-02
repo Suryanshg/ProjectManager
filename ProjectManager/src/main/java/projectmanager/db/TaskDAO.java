@@ -109,7 +109,8 @@ public class TaskDAO {
 
 		try {
 			PreparedStatement ps = conn
-					.prepareStatement("SELECT * AS count FROM Task WHERE Project = ? and parentTask is NULL ");
+					.prepareStatement(
+							"SELECT * FROM Task WHERE Project = ? and parentTask is NULL ORDER BY outlineNumber;");
 			ps.setString(1, projectid);
 			ResultSet resultSet = ps.executeQuery();
 
@@ -132,7 +133,7 @@ public class TaskDAO {
 		List<Task> tasks = new ArrayList<Task>();
 
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Task WHERE parentTask = ? ");
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Task WHERE parentTask = ? ORDER BY outlineNumber;");
 			ps.setString(1, parentId);
 			ResultSet resultSet = ps.executeQuery();
 
