@@ -1,11 +1,9 @@
 package projectmanager.http;
 
 public class CreateTeammateResponse {
+    public int statusCode;
     String teammateid;
     String error;
-    int statusCode;
-
-    public CreateTeammateResponse() {}
 
     public CreateTeammateResponse(String error, int statusCode) {
         this.error = error;

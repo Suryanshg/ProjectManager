@@ -40,7 +40,7 @@ public class TeammateDAO {
             }
 
         } catch (Exception e) {
-
+            throw new Exception("Failed to find existing teammates: " + e.getMessage());
         }
 
         try {
@@ -65,6 +65,46 @@ public class TeammateDAO {
         } catch (Exception e) {
             throw new Exception("Failed to delete teammate: " + e.getMessage());
         }
+    }
+
+    public Teammate getTeammateById(String id) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Teammate WHERE id = ?;");
+            ps.setString(1, id);
+            ResultSet resultSet = ps.executeQuery();
+            resultSet.next();
+            Teammate t = generateTeammate(resultSet);
+            resultSet.close();
+            ps.close();
+            return t;
+        } catch (Exception e) {
+            throw new Exception("Failed in retrieving teammate: " + e.getMessage());
+        }
+    }
+
+    public Teammate getTeammateByNameAndProjectId(String name, String projectid) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Teammate WHERE name = ? and Project = ?;");
+            ps.setString(1, name);
+            ps.setString(2, projectid);
+            ResultSet resultSet = ps.executeQuery();
+            resultSet.next();
+            Teammate t = generateTeammate(resultSet);
+            resultSet.close();
+            ps.close();
+            return t;
+        } catch (Exception e) {
+            throw new Exception("Failed in retrieving teammate: " + e.getMessage());
+        }
+    }
+
+    private Teammate generateTeammate(ResultSet resultSet) throws Exception {
+        System.out.println("in generateTeammate");
+        UUID id = UUID.fromString(resultSet.getString("id"));
+        String name = resultSet.getString("name");
+        String projectid = resultSet.getString("Project");
+
+        return new Teammate(id, name);
     }
 
 

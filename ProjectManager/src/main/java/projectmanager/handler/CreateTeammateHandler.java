@@ -4,13 +4,9 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
-import projectmanager.db.ProjectDAO;
 import projectmanager.db.TeammateDAO;
-import projectmanager.http.CreateProjectRequest;
-import projectmanager.http.CreateProjectResponse;
 import projectmanager.http.CreateTeammateRequest;
 import projectmanager.http.CreateTeammateResponse;
-import projectmanager.model.Project;
 import projectmanager.model.Teammate;
 
 public class CreateTeammateHandler implements RequestHandler<CreateTeammateRequest, CreateTeammateResponse> {
@@ -45,10 +41,10 @@ public class CreateTeammateHandler implements RequestHandler<CreateTeammateReque
 
         CreateTeammateResponse response;
         try {
-            if (createTeammate(req.getName(), req.getProjectId())) {
+            if (createTeammate(req.getName(), req.getprojectid())) {
                 response = new CreateTeammateResponse("Teammate created successfully.", 200, teammateId);
             } else {
-                response = new CreateTeammateResponse("Project Creation Failed! Project with the same name already exists!", 422);
+                response = new CreateTeammateResponse("Teammate Creation Failed! Teammate with the same name already exists in this project!", 422);
             }
 
         } catch (Exception e) {

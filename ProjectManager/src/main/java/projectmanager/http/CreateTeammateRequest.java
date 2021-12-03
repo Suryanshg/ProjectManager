@@ -1,8 +1,8 @@
 package projectmanager.http;
 
 public class CreateTeammateRequest {
-    String name;
-    String projectid;
+    public String name;
+    public String projectid;
 
     public CreateTeammateRequest() {}
 
@@ -19,11 +19,11 @@ public class CreateTeammateRequest {
         this.name = name;
     }
 
-    public String getProjectId() {
+    public String getprojectid() {
         return this.projectid;
     }
 
-    public void setProjectId(String projectid) {
+    public void setprojectid(String projectid) {
         this.projectid = projectid;
     }
 }

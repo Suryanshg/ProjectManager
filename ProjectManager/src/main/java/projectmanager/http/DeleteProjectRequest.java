@@ -6,7 +6,6 @@ public class DeleteProjectRequest {
 	public String projectid;
 	
 	public DeleteProjectRequest() {
-		
 	}
 	
 	public DeleteProjectRequest(String projectid) {

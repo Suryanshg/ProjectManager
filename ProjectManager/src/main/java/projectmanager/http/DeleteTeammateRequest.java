@@ -4,18 +4,17 @@ public class DeleteTeammateRequest {
     String teammateid;
 
     public DeleteTeammateRequest() {
-
     }
 
     public DeleteTeammateRequest(String teammateid) {
         this.teammateid = teammateid;
     }
 
-    public String getTeammateId() {
+    public String getTeammateid() {
         return this.teammateid;
     }
 
-    public void setTeammateId(String teammateid) {
+    public void setTeammateid(String teammateid) {
         this.teammateid = teammateid;
     }
 }
