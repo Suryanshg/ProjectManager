@@ -82,6 +82,28 @@ public class TeammateDAO {
         }
     }
 
+    public List<Teammate> getTeammatesByProjectId(String projectId) throws Exception {
+        List<Teammate> teammates = new ArrayList<Teammate>();
+
+        try {
+            PreparedStatement ps = conn.prepareStatement("SELECT * FROM Teammate WHERE Project = ? ORDER BY name;");
+            ps.setString(1, projectId);
+            ResultSet resultSet = ps.executeQuery();
+
+            while (resultSet.next()) {
+                Teammate t = generateTeammate(resultSet);
+                teammates.add(t);
+            }
+
+            resultSet.close();
+            ps.close();
+            return teammates;
+        } catch (Exception e) {
+            throw new Exception("Failed in retrieving all teammates: " + e.getMessage());
+        }
+
+    }
+
     public Teammate getTeammateByNameAndProjectId(String name, String projectid) throws Exception {
         try {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Teammate WHERE name = ? and Project = ?;");
