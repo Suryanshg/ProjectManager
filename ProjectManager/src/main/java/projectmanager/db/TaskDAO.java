@@ -152,7 +152,7 @@ public class TaskDAO {
 
 	// Helper function to generate a Task
 	private Task generateTask(ResultSet resultSet) throws Exception {
-		System.out.println("in generateTask");
+//		System.out.println("in generateTask");
 		UUID id = UUID.fromString(resultSet.getString("id"));
 		String title = resultSet.getString("title");
 		Boolean completed = resultSet.getBoolean("completed");
@@ -160,7 +160,7 @@ public class TaskDAO {
 
 		Task task = new Task(id, title, outlineNumber, completed);
 
-		String parentId = resultSet.getString("parentTask");
+//		String parentId = resultSet.getString("parentTask");
 		// String projectId = resultSet.getString("Project");
 
 		// Setting up the subTasks

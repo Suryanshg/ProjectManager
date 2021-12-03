@@ -121,10 +121,13 @@ public class TeammateDAO {
     }
 
     private Teammate generateTeammate(ResultSet resultSet) throws Exception {
-        System.out.println("in generateTeammate");
+//        System.out.println("in generateTeammate");
         UUID id = UUID.fromString(resultSet.getString("id"));
         String name = resultSet.getString("name");
-        String projectid = resultSet.getString("Project");
+//        String projectid = resultSet.getString("Project");
+        
+        // TODO: Set up related tasks
+        
 
         return new Teammate(id, name);
     }
