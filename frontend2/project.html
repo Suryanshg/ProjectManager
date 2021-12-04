@@ -19,19 +19,11 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <script src="js/constants.js"></script>
     <script src="js/project/project.js"></script>
   </head>
   <script>
-    function getParameterByName(name, url = window.location.href) {
-      name = name.replace(/[\[\]]/g, "\\$&");
-      var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-        results = regex.exec(url);
-      if (!results) return null;
-      if (!results[2]) return "";
-      return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
-
-    var project;
+    let project;
     $(function () {
       project = new Project($("#projectHeader"), $("#topdiv"));
     });
@@ -43,7 +35,12 @@
         <a class="nav-link text-dark" href="./index.html">Home</a>
         <a class="nav-link text-dark" href="./admin.html">Admin</a>
         <div class="ms-auto me-3">
-          <button class="btn btn-primary me-2">Your Team</button>
+          <button
+            class="btn btn-primary me-2"
+            onclick="window.location.href = 'team.html?project=' + getParameterByName('project')"
+          >
+            Your Team
+          </button>
           <button class="btn btn-primary">Add Task</button>
         </div>
       </div>
