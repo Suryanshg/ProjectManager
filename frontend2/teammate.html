@@ -24,14 +24,16 @@
   <script src="js/teammate/teammate.js"></script>
 
   <script>
-    let team;
+    let teammate;
     $(function () {
       teammate = new Teammate($("#teammateNameInput"),
         $("#teammateCreationError"),
         $("#teammateCreationSuccess"),
         $("#teammateCreationErrorDetailed"),
         $("#submitButton"),
-        $("#submitButtonSpan"));
+        $("#submitButtonSpan"),);
+
+        $("#teammateForm").submit(function() { return false; });
     });
   </script>
   <body>
@@ -63,7 +65,7 @@
           Enter the name of your teammate, then submit it below.
           <div class="card mt-3">
             <div class="card-body">
-              <form class="col s6">
+              <form class="col s6" id="teammateForm">
                 <div class="mb-3">
                   <label for="teammateNameInput" class="form-label"
                     >Teammate</label
