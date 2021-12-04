@@ -7,7 +7,9 @@ class Team {
 
     this.render();
   }
-  deleteTask(teammateid, elementid) {
+  deleteTask(teammateid, elementid, buttonid) {
+    const button = $(`#${buttonid}`);
+    button.attr("disabled", true);
     fetch(this.apiurl + "project/teammates/deleteTeammate", {
       method: "POST",
       body: JSON.stringify({ teammateid }),
@@ -15,6 +17,7 @@ class Team {
       .then((response) => response.json())
       .then((response) => {
         if (response["statusCode"] != 200) {
+          button.removeAttr("disabled");
           $(`#${elementid}`).show();
           return;
         }

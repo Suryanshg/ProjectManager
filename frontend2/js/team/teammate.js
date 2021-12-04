@@ -8,21 +8,17 @@ class Teammate {
   }
 
   render() {
-    var archivedtext = "";
-    if (this.archived) {
-      archivedtext = "disabled";
-    }
     let html = `
     <div class="row mb-3">
       <hr>
       <div class="col s12">
         <h4>${this.name}</h4>
         Tasks: ${this.tasks.map((task) => task.title)} <br/> <br/>
-        <button type="button" class="btn btn-danger" onclick="${
-          this.taskVar
-        }.deleteTask('${this.id}', 'taskDeletionError${
+        <button type="button" class="btn btn-danger" id="taskDeletionButton${
+          this.id
+        }"onclick="${this.taskVar}.deleteTask('${this.id}', 'taskDeletionError${
       this.id
-    }')">Delete</button>
+    }', 'taskDeletionButton${this.id}')">Delete</button>
         <div class="row" id="taskDeletionError${this.id}" style="display: none">
         <div class="col s12">
           <hr />
