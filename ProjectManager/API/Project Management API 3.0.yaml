@@ -1,0 +1,836 @@
+---
+openapi: 3.0.2
+info:
+  title: Project Management API
+  version: 1.0.3
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0
+paths:
+  /admin:
+    summary: Admin landing page
+    description: Contains all the admin related API operations
+    get:
+      tags:
+      - Admin-Only Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAllProjectsResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListAllProjectsResponse'
+          description: Bad Request
+      summary: /admin
+      description: Lists all the projects with their current status
+  /admin/archiveproject:
+    summary: Archive Project
+    description: endpoint for archiving a project
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArchiveRequest'
+        required: true
+      tags:
+      - Admin-Only Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchiveResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArchiveResponse'
+          description: Bad Request
+  /admin/deleteproject:
+    summary: Delete Project
+    description: endpoint for deleting a project
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteProjectRequest'
+        required: true
+      tags:
+      - Admin-Only Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteProjectResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteProjectResponse'
+          description: Bad Request
+  /project/createProject:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+        required: true
+      tags:
+      - Project Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProjectResponse'
+          description: The project was created successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateProjectResponse'
+          description: The project wasn't made successfully.
+      summary: /project/createProject
+      description: "Creates a new project, returning a project ID in the process."
+  /project:
+    get:
+      tags:
+      - Project Calls
+      parameters:
+      - name: project
+        description: The project ID
+        schema:
+          type: string
+        in: query
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+          description: Project details have been gathered sucessfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectResponse'
+          description: The project details couldn't be retrieved.
+      summary: /project
+      description: Lists the project details.
+  /project/tasks:
+    get:
+      tags:
+      - Project Calls
+      parameters:
+      - name: projectid
+        description: The project ID.
+        schema:
+          type: string
+        in: query
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TasksResponse'
+          description: The tasks were returned successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TasksResponse'
+          description: The tasks couldn't be returned successfully.
+      summary: /project/tasks
+      description: Gets the tasks in the project.
+  /project/teammates:
+    get:
+      tags:
+      - Project Calls
+      parameters:
+      - name: projectid
+        description: The project ID.
+        schema:
+          type: string
+        in: query
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeammatesResponse'
+          description: The list of teammates has been returned successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeammatesResponse'
+          description: The list of teammates couldn't be returned successfully.
+      summary: /project/teammates
+      description: Lists all the teammates in the project.
+  /project/tasks/assignTeammate:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignTeammateRequest'
+        required: true
+      tags:
+      - Project Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignTeammateResponse'
+          description: The teammate was assigned to the task successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignTeammateResponse'
+          description: The teammate couldn't be assigned to the task.
+      summary: /project/tasks/assignTeammate
+      description: Assign a teammate to a task.
+  /project/tasks/unassignTeammate:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnassignTeammateRequest'
+        required: true
+      tags:
+      - Project Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnassignTeammateResponse'
+          description: The teammate was unassigned from the task successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnassignTeammateResponse'
+          description: The teammate was unable to be unassigned from the task.
+      summary: /project/tasks/unassignTeammate
+      description: Unassigns a teammate from a task.
+  /project/tasks/createTask:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+        required: true
+      tags:
+      - Project Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTaskResponse'
+          description: The task was created successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTaskResponse'
+          description: The task was unable to be created successfully.
+      summary: /project/tasks/createTask
+      description: Creates a task.
+  /project/tasks/updateTask:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+        required: true
+      tags:
+      - Project Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTaskResponse'
+          description: The task was updated successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTaskResponse'
+          description: The task couldn't be updated.
+      summary: /project/tasks/updateTask
+      description: Updates a task's parameters.
+  /project/teammates/createTeammate:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTeammateRequest'
+        required: true
+      tags:
+      - Project Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTeammateResponse'
+          description: The teammate was created successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateTeammateResponse'
+          description: The teammate wasn't created successfully.
+      summary: /project/teammates/createTeammate
+      description: Creates a teammate.
+  /project/teammates/deleteTeammate:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTeammateRequest'
+        required: true
+      tags:
+      - Project Calls
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTeammateResponse'
+          description: The teammate was deleted successfully.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTeammateResponse'
+          description: The teammate wasn't deleted successfully.
+      summary: /project/teammates/deleteTeammate
+components:
+  schemas:
+    Project:
+      title: Root Type for Project
+      description: Datatype representing a project
+      required:
+      - isArchived
+      - name
+      - tasks
+      - teammates
+      - id
+      type: object
+      properties:
+        name:
+          description: The name of the task.
+          type: string
+        isArchived:
+          description: Whether the project is archived.
+          type: boolean
+        teammates:
+          description: The teammates in this project.
+          type: array
+          items:
+            $ref: '#/components/schemas/Teammate'
+        tasks:
+          description: The tasks in this project.
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        id:
+          description: The ID of the project.
+          type: string
+      example:
+        id: ""
+        name: ""
+        isArchived: false
+        teammates: []
+        tasks: []
+    Teammate:
+      title: Root Type for Teammate
+      description: Datatype for capturing teammates
+      required:
+      - tasks
+      - name
+      - id
+      type: object
+      properties:
+        name:
+          description: The name of the teammate.
+          type: string
+        tasks:
+          description: The tasks that are assigned to this teammate.
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        id:
+          description: The unique ID of the teammate.
+          type: string
+      example:
+        name: ""
+        tasks: []
+    Task:
+      title: Root Type for Task
+      description: Datatype for capturing a task
+      required:
+      - parentTask
+      - subTasks
+      - title
+      - assignees
+      - completed
+      - id
+      - outlineNumber
+      type: object
+      properties:
+        id:
+          description: The unique ID of this task.
+          type: string
+        title:
+          description: The title of this task.
+          type: string
+        completed:
+          description: Whether the task is completed or not.
+          type: string
+        subTasks:
+          description: The tasks filed under this task
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        assignees:
+          description: Who's assigned to this task.
+          type: array
+          items:
+            $ref: '#/components/schemas/Teammate'
+        parentTask:
+          $ref: '#/components/schemas/Task'
+          description: The parent task (not having a task means it's at the top level)
+        outlineNumber:
+          description: The x.x.x outline number(?)
+          type: string
+      example:
+        id: ""
+        title: ""
+        completed: ""
+        subTasks: []
+        assignees: []
+        parentTask: {}
+    ArchiveRequest:
+      description: Request for archiving a project
+      required:
+      - projectid
+      type: object
+      properties:
+        projectid:
+          description: ID of the project to be archived.
+          type: string
+      example:
+        projectid: ""
+    DeleteProjectRequest:
+      description: Request for deleting a project
+      required:
+      - projectid
+      type: object
+      properties:
+        projectid:
+          description: The ID of the project to be deleted.
+          type: string
+      example:
+        projectid: ""
+    ListAllProjectsResponse:
+      description: Response to deal with listing all project
+      required:
+      - projects
+      - error
+      - statusCode
+      type: object
+      properties:
+        projects:
+          description: List of projects
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+        error:
+          description: The Error Message
+          type: string
+        statusCode:
+          description: The status code
+          type: integer
+      example:
+        projects: []
+        error: ""
+        statusCode: 400
+    ArchiveResponse:
+      description: Response related to archive operation
+      required:
+      - archived
+      - statusCode
+      - error
+      type: object
+      properties:
+        archived:
+          description: whether the project got archived or not
+          type: boolean
+        statusCode:
+          description: status Code
+          type: integer
+        error:
+          description: error message
+          type: string
+      example:
+        archived: true
+        error: ""
+        statusCode: 200
+    DeleteProjectResponse:
+      description: Reponse dealing with deleting a project
+      required:
+      - deleted
+      - statusCode
+      - error
+      type: object
+      properties:
+        deleted:
+          description: whether the project got successfully deleted or not
+          type: boolean
+        statusCode:
+          description: |
+            status code
+          type: integer
+        error:
+          description: error message
+          type: string
+      example:
+        deleted: true
+        error: ""
+        statusCode: 200
+    CreateProjectRequest:
+      title: Root Type for CreateProjectRequest
+      description: ""
+      required:
+      - projectName
+      type: object
+      properties:
+        projectName:
+          description: The name of the project to be created.
+          type: string
+      example:
+        projectName: ""
+    CreateProjectResponse:
+      title: Root Type for CreateProjectResponse
+      description: ""
+      required:
+      - error
+      - projectid
+      - statusCode
+      - url
+      type: object
+      properties:
+        projectid:
+          description: The ID of the project that was created.
+          type: string
+        url:
+          description: The URL to access this new project.
+          type: string
+        statusCode:
+          description: status code of the response
+          type: integer
+        error:
+          description: The error message
+          type: string
+      example:
+        projectid: "12345"
+        url: http://example.com/?project=12345
+        error: Error Message here ...
+        statusCode: 400
+    CreateTaskRequest:
+      title: Root Type for CreateTaskRequest
+      description: ""
+      required:
+      - title
+      - parentTask
+      - projectid
+      type: object
+      properties:
+        title:
+          description: The name of the task to be created.
+          type: string
+        projectid:
+          description: The project ID to be worked with.
+          type: string
+        parentTask:
+          $ref: '#/components/schemas/Task'
+          description: "The ID of the parent task to file under. Not passing this\
+            \ files it under the base project (1.x, 2.x, 3.x)."
+        teammates:
+          description: array of teammate ids
+          type: string
+      example:
+        projectid: "12345"
+        parentTask: ""
+        title: Task Name
+    CreateTaskResponse:
+      title: Root Type for CreateTaskResponse
+      description: ""
+      required:
+      - statusCode
+      - error
+      - task
+      type: object
+      properties:
+        statusCode:
+          description: status Code
+          type: integer
+        error:
+          description: error message
+          type: string
+        task:
+          $ref: '#/components/schemas/Task'
+          description: the newly created Task
+      example:
+        task: ""
+        error: ""
+        statusCode: 200
+    AssignTeammateRequest:
+      title: Root Type for AssignTeammateRequest
+      description: ""
+      required:
+      - teammateid
+      - taskid
+      - projectid
+      type: object
+      properties:
+        taskid:
+          description: ID of the task to be assigned to the teammate.
+          type: string
+        teammateid:
+          description: ID of the teammate to assign the task to.
+          type: string
+        projectid:
+          description: id of the project
+          type: string
+      example:
+        teammateid: ""
+        taskid: ""
+        projectid: ""
+    ProjectResponse:
+      description: ""
+      required:
+      - error
+      - project
+      - statusCode
+      type: object
+      properties:
+        project:
+          $ref: '#/components/schemas/Project'
+          description: ""
+        error:
+          description: ""
+          type: string
+        statusCode:
+          description: ""
+          type: integer
+    CreateTeammateRequest:
+      title: Root Type for createTeammateRequest
+      description: ""
+      required:
+      - name
+      - projectid
+      type: object
+      properties:
+        projectid:
+          description: The Project ID to make the teammate in.
+          type: string
+        name:
+          description: The name of the teammate.
+          type: string
+      example:
+        projectid: ""
+        name: ""
+    CreateTeammateResponse:
+      title: Root Type for createTeammateResponse
+      description: ""
+      required:
+      - statusCode
+      - error
+      - teammate
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+        teammate:
+          $ref: '#/components/schemas/Teammate'
+          description: The newly created teammate
+      example:
+        teammate: ""
+        error: ""
+        statusCode: 200
+    DeleteTeammateRequest:
+      title: Root Type for deleteTeammateRequest
+      description: ""
+      required:
+      - teammateid
+      type: object
+      properties:
+        teammateid:
+          description: The ID of the teammate to be deleted.
+          type: string
+      example:
+        teammateid: ""
+    UnassignTeammateRequest:
+      title: Root Type for unassignTeammateRequest
+      description: ""
+      required:
+      - taskid
+      - teammateid
+      type: object
+      properties:
+        taskid:
+          description: The ID of the task to unassign from the teammate.
+          type: string
+        teammateid:
+          description: The ID of the teammate to unassign the task from.
+          type: string
+      example:
+        taskid: ""
+        teammateid: ""
+    UpdateTaskRequest:
+      title: Root Type for updateTaskRequest
+      description: Used for marking as well as renaming a task
+      required:
+      - taskid
+      type: object
+      properties:
+        taskid:
+          description: The ID of the task.
+          type: string
+        name:
+          description: The name of the task.
+          type: string
+        completed:
+          description: Whether the task is completed or not.
+          type: boolean
+      example:
+        taskid: ""
+        name: ""
+        completed: true
+    TasksResponse:
+      description: Gets the tasks related to a particular project
+      required:
+      - tasks
+      - statusCode
+      - error
+      type: object
+      properties:
+        tasks:
+          description: List of tasks
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    AssignTeammateResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: Error message
+          type: string
+    UnassignTeammateResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: 'error message       '
+          type: string
+    UpdateTaskResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    TeammatesResponse:
+      description: ""
+      required:
+      - teammates
+      - statusCode
+      - error
+      type: object
+      properties:
+        teammates:
+          description: List of teammates dedicated to a project
+          type: array
+          items:
+            $ref: '#/components/schemas/Teammate'
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    DeleteTeammateResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+tags:
+- name: Admin-Only Calls
+  description: Calls that can only be performed from the admin panel.
+- name: Project Calls
+  description: Calls that are performed for regular users when doing project management.
