@@ -35,7 +35,6 @@ public class TaskDAO {
 				ps.setString(2, parentTask);
 			else
 				ps.setNull(2, Types.NULL);
-
 			if (projectid != null)
 				ps.setString(3, projectid);
 			else
@@ -52,7 +51,7 @@ public class TaskDAO {
 		} catch (Exception e) {
 		}
 		try {
-			String statement = String.format("SELECT count(*) AS count FROM Task WHERE parentTask %s ?;",
+			String statement = String.format("SELECT count(*) AS count FROM Task WHERE parentTask %s ? AND Project %s ?;",
 					parentTask == null ? "IS" : "=", projectid == null ? "IS" : "=");
 			PreparedStatement ps = conn
 					.prepareStatement(statement);
@@ -60,6 +59,10 @@ public class TaskDAO {
 				ps.setString(1, parentTask);
 			else
 				ps.setNull(1, Types.NULL);
+			if (projectid != null)
+				ps.setString(2, projectid);
+			else
+				ps.setNull(2, Types.NULL);
 			ResultSet resultSet = ps.executeQuery();
 			while (resultSet.next()) {
 				task.outlineNumber = String.valueOf(resultSet.getInt("count") + 1);
@@ -152,7 +155,7 @@ public class TaskDAO {
 
 	// Helper function to generate a Task
 	private Task generateTask(ResultSet resultSet) throws Exception {
-//		System.out.println("in generateTask");
+		// System.out.println("in generateTask");
 		UUID id = UUID.fromString(resultSet.getString("id"));
 		String title = resultSet.getString("title");
 		Boolean completed = resultSet.getBoolean("completed");
@@ -160,7 +163,7 @@ public class TaskDAO {
 
 		Task task = new Task(id, title, outlineNumber, completed);
 
-//		String parentId = resultSet.getString("parentTask");
+		// String parentId = resultSet.getString("parentTask");
 		// String projectId = resultSet.getString("Project");
 
 		// Setting up the subTasks
