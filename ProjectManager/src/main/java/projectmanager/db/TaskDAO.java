@@ -105,6 +105,22 @@ public class TaskDAO {
 		}
 	}
 
+	public boolean deleteAllTasks(String projectid) throws Exception {
+		try {
+			PreparedStatement ps = conn.prepareStatement("UPDATE Task SET parentTask = NULL WHERE Project = ?;");
+			ps.setString(1, projectid);
+			Boolean res = ps.execute();
+			ps = conn.prepareStatement("DELETE FROM Task WHERE Project = ?;");
+			ps.setString(1, projectid);
+			ps.execute();
+			ps.close();
+			return true;
+
+		} catch (Exception e) {
+			throw new Exception("Failed to delete tasks: " + e.getMessage());
+		}
+	}
+
 	// Retrieves the top level tasks for a project
 	public List<Task> getTasksByProject(String projectid) throws Exception {
 

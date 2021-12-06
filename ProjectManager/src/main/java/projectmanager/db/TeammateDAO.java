@@ -44,7 +44,8 @@ public class TeammateDAO {
         }
 
         try {
-            PreparedStatement ps = conn.prepareStatement("INSERT INTO Teammate (id, name, Project) values (?,?,?);", Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO Teammate (id, name, Project) values (?,?,?);",
+                    Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, String.valueOf(teammate.id));
             ps.setString(2, teammate.name);
             ps.setString(3, projectid);
@@ -120,17 +121,28 @@ public class TeammateDAO {
         }
     }
 
+    public boolean deleteAllTeammates(String projectid) throws Exception {
+        try {
+            PreparedStatement ps = conn.prepareStatement("DELETE FROM Teammate WHERE Project = ?;");
+            ps.setString(1, projectid);
+            ps.executeUpdate();
+            ps.close();
+            return true;
+
+        } catch (Exception e) {
+            throw new Exception("Failed to delete tasks: " + e.getMessage());
+        }
+    }
+
     private Teammate generateTeammate(ResultSet resultSet) throws Exception {
-//        System.out.println("in generateTeammate");
+        // System.out.println("in generateTeammate");
         UUID id = UUID.fromString(resultSet.getString("id"));
         String name = resultSet.getString("name");
-//        String projectid = resultSet.getString("Project");
-        
+        // String projectid = resultSet.getString("Project");
+
         // TODO: Set up related tasks
-        
 
         return new Teammate(id, name);
     }
-
 
 }

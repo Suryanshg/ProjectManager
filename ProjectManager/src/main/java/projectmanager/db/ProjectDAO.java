@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 import projectmanager.model.Project;
+import projectmanager.db.TaskDAO;
+import projectmanager.db.TeammateDAO;
+import projectmanager.db.TeammateTaskDAO;
 
 public class ProjectDAO {
 
@@ -126,13 +129,17 @@ public class ProjectDAO {
 	// Deleting a project by its id
 	public boolean deleteProject(String id) throws Exception {
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM Project WHERE id = ?;");
-			ps.setString(1, id);
-			int numAffected = ps.executeUpdate();
-			ps.close();
+			TeammateDAO teamDAO = new TeammateDAO();
+			TaskDAO taskDAO = new TaskDAO();
+			if (teamDAO.deleteAllTeammates(id) && taskDAO.deleteAllTasks(id)) {
+				PreparedStatement ps = conn.prepareStatement("DELETE FROM Project WHERE id = ?;");
+				ps.setString(1, id);
+				int numAffected = ps.executeUpdate();
+				ps.close();
 
-			return (numAffected == 1);
-
+				return (numAffected == 1);
+			} else
+				return false;
 			// TODO: Need to add code to delete the records linked to the deleted project in
 			// the Teammate and Task table
 
@@ -143,19 +150,18 @@ public class ProjectDAO {
 
 	// Helper method to generate a project from the retrieved resultSet
 	private Project generateProject(ResultSet resultSet) throws Exception {
-//		System.out.println("in generateProject");
+		// System.out.println("in generateProject");
 		UUID id = UUID.fromString(resultSet.getString("id"));
 		String name = resultSet.getString("name");
 		boolean isArchived = resultSet.getBoolean("isArchived"); // Setting up the isArchived
 		Project project = new Project(id, name, isArchived);
-		
+
 		// TODO: Add DAO related code for retrieving related Teammates and Tasks
-		
-		
+
 		// Adding the tasks related to this project
 		TaskDAO taskDao = new TaskDAO();
 		project.tasks = taskDao.getTasksByProject(project.id.toString());
-		
+
 		// Adding the teammates related to this project
 		TeammateDAO teammateDao = new TeammateDAO();
 		project.teammates = teammateDao.getTeammatesByProjectId(project.id.toString());
