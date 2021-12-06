@@ -109,7 +109,7 @@ public class TaskDAO {
 		try {
 			PreparedStatement ps = conn.prepareStatement("UPDATE Task SET parentTask = NULL WHERE Project = ?;");
 			ps.setString(1, projectid);
-			Boolean res = ps.execute();
+			ps.execute();
 			ps = conn.prepareStatement("DELETE FROM Task WHERE Project = ?;");
 			ps.setString(1, projectid);
 			ps.execute();

@@ -15,11 +15,15 @@ import projectmanager.db.TeammateTaskDAO;
 public class ProjectDAO {
 
 	java.sql.Connection conn;
+	TeammateDAO teamDAO;
+	TaskDAO taskDAO;
 
 	public ProjectDAO() {
 
 		try {
 			conn = DatabaseUtil.connect();
+			teamDAO = new TeammateDAO();
+			taskDAO = new TaskDAO();
 		} catch (Exception e) {
 			e.printStackTrace();
 			conn = null;
@@ -129,8 +133,7 @@ public class ProjectDAO {
 	// Deleting a project by its id
 	public boolean deleteProject(String id) throws Exception {
 		try {
-			TeammateDAO teamDAO = new TeammateDAO();
-			TaskDAO taskDAO = new TaskDAO();
+			// TODO teammate task dao
 			if (teamDAO.deleteAllTeammates(id) && taskDAO.deleteAllTasks(id)) {
 				PreparedStatement ps = conn.prepareStatement("DELETE FROM Project WHERE id = ?;");
 				ps.setString(1, id);
