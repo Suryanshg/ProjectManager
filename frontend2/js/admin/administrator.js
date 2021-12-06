@@ -41,6 +41,17 @@ class Administrator {
   }
 
   deleteProject(projectid) {
+    var requestbody = {"projectid": projectid}
+    fetch(this.apiurl + "admin/deleteproject", {
+      method: "POST",
+      body: JSON.stringify(requestbody)
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      if (response["statusCode"] == 200) {
+        this.render()
+      }
+    })
     console.log(`Attempting to delete project with id ${projectid}`);
   }
 }

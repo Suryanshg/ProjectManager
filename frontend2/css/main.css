@@ -1,0 +1,16 @@
+h2 .task {
+    margin-left: 1rem;
+}
+
+h3 .task {
+    margin-left: 2rem;
+}
+
+h4 .task {
+    margin-left: 3rem;
+}
+
+h5 .task {
+    margin-left: 4rem;
+}
+
