@@ -46,11 +46,16 @@ class Project {
       .then((response) => response.json())
       .then((response) => {
         if (response["statusCode"] != 200) {
-          console.log(response["statusCode"]);
+          $("#yourTeamButton").attr("disabled", true)
+          $("#addTaskButton").attr("disabled", true)
           if (response["statusCode"] == 422) {
             $(this.header).html("A project with this ID doesn't exist.");
+            $("#subTasks-root").empty()
+            $("#subTasks-root").removeClass("placeholder-glow")
           } else {
             $(this.header).html("Couldn't load project due to an error.");
+            $("#subTasks-root").empty()
+            $("#subTasks-root").removeClass("placeholder-glow")
           }
 
           return;
@@ -65,6 +70,11 @@ class Project {
         console.log(tasks)
         this.recursivecreate(tasks, 0, "root", "")
         this.renderselect()
+
+        if (response['project']['isArchived']) {
+          $("#projectArchivedText").show()
+          $("#addTaskButton").attr("disabled", true)
+        }
       });
   }
 
@@ -85,8 +95,9 @@ class Project {
     $("#fileUnderSelect").empty()
     $("#fileUnderSelect").append("<option value='root' selected>File as top level task</option>")
     for (let i = 0; i < this.alltasks.length; i++) {
-      
-      $("#fileUnderSelect").append("<option value='" + this.alltasks[i].id + "'>" + this.alltasks[i].position + " " + this.alltasks[i].title + "</option>")
+      var repeated = "&nbsp"
+      repeated = repeated.repeat(this.alltasks[i].depth * 2)
+      $("#fileUnderSelect").append("<option value='" + this.alltasks[i].id + "'>" + repeated + this.alltasks[i].position + " " + this.alltasks[i].title + "</option>")
     }
   }
 }

@@ -12,7 +12,7 @@ class Task {
         let subtaskstring = ""
 
         if (this.subtasks.length > 0) {
-            subtaskstring = `<div class="list-group" style="margin-left: ${this.depth * 15}px" id="subTasks-${this.id}"></div>`
+            subtaskstring = `<div class="list-group" style="margin-left: 20px" id="subTasks-${this.id}"></div>`
         }
 
         var renderstring = `

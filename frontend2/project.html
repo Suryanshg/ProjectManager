@@ -29,11 +29,10 @@
       <a class="nav-link text-dark" href="./index.html">Home</a>
       <a class="nav-link text-dark" href="./admin.html">Admin</a>
       <div class="ms-auto me-3">
-        <button class="btn btn-primary me-2"
-          onclick="window.location.href = 'team.html?project=' + getParameterByName('project')">
+        <button class="btn btn-primary me-2" id="yourTeamButton" onclick="window.location.href = 'team.html?project=' + getParameterByName('project')">
           Your Team
         </button>
-        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add Task</button>
+        <button class="btn btn-primary" id="addTaskButton" data-bs-toggle="modal" data-bs-target="#addTaskModal">Add Task</button>
       </div>
     </div>
     <button class="navbar-toggler me-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -41,10 +40,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
   </nav>
-  <div class="container mt-3">
+  <div class="container mt-3 mb-3">
     <div class="row mb-3">
       <div class="col s12">
         <h4 id="projectHeader" class="placeholder-glow"><span class="placeholder col-3"></span></h4>
+        <h6 class="text-muted mt-2" style="display: none" id="projectArchivedText">This project has been archived, so you can't make any changes.</h6>
       </div>
     </div>
     <div id="topdiv">

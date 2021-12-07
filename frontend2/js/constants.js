@@ -1,5 +1,5 @@
 function getApiUrl() {
-  return "https://8k6rwfnj1b.execute-api.us-east-2.amazonaws.com/prod/";
+  return "https://ocsazwf5sg.execute-api.us-east-2.amazonaws.com/prod/";
 }
 function getParameterByName(name, url = window.location.href) {
   name = name.replace(/[\[\]]/g, "\\$&");
