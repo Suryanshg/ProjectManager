@@ -90,32 +90,30 @@ public class TaskDAO {
 		}
 	}
 
-	public boolean updateTask(String id, String name, int completed) throws Exception {
+	public boolean markTask(String id, int completed) throws Exception {
 		try {
-			if (name != null) {
-				PreparedStatement ps = conn.prepareStatement("UPDATE Task SET title = ? WHERE id = ?;");
-				ps.setString(1, name);
-				ps.setString(2, id);
-				ps.execute();
-				ps.close();
-			}
+			PreparedStatement ps = conn.prepareStatement("UPDATE Task SET completed = ? WHERE id = ?;");
+			ps.setInt(1, completed);
+			ps.setString(2, id);
+			ps.execute();
+			ps.close();
+			return true;
 		} catch (Exception e) {
-			throw new Exception("Failed to update task name: " + e.getMessage());
+			throw new Exception("Failed to mark task as complete: " + e.getMessage());
 		}
+	}
 
+	public boolean renameTask(String id, String title) throws Exception {
 		try {
-			if (completed != -1) {
-				PreparedStatement ps = conn.prepareStatement("UPDATE Task SET completed = ? WHERE id = ?;");
-				ps.setInt(1, completed);
-				ps.setString(2, id);
-				ps.execute();
-				ps.close();
-			}
+			PreparedStatement ps = conn.prepareStatement("UPDATE Task SET title = ? WHERE id = ?;");
+			ps.setString(1, title);
+			ps.setString(2, id);
+			ps.execute();
+			ps.close();
+			return true;
 		} catch (Exception e) {
-			throw new Exception("Failed to update task completion: " + e.getMessage());
+			throw new Exception("Failed to rename task: " + e.getMessage());
 		}
-
-		return true;
 	}
 
 	public boolean deleteTask(String id) throws Exception {
