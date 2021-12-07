@@ -1,13 +1,11 @@
 package projectmanager.db;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.sql.Types;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import projectmanager.model.Project;
 import projectmanager.model.Task;
 
@@ -90,6 +88,34 @@ public class TaskDAO {
 		} catch (Exception e) {
 			throw new Exception("Failed to insert task: " + e.getMessage());
 		}
+	}
+
+	public boolean updateTask(String id, String name, int completed) throws Exception {
+		try {
+			if (name != null) {
+				PreparedStatement ps = conn.prepareStatement("UPDATE Task SET title = ? WHERE id = ?;");
+				ps.setString(1, name);
+				ps.setString(2, id);
+				ps.execute();
+				ps.close();
+			}
+		} catch (Exception e) {
+			throw new Exception("Failed to update task name: " + e.getMessage());
+		}
+
+		try {
+			if (completed != -1) {
+				PreparedStatement ps = conn.prepareStatement("UPDATE Task SET completed = ? WHERE id = ?;");
+				ps.setInt(1, completed);
+				ps.setString(2, id);
+				ps.execute();
+				ps.close();
+			}
+		} catch (Exception e) {
+			throw new Exception("Failed to update task completion: " + e.getMessage());
+		}
+
+		return true;
 	}
 
 	public boolean deleteTask(String id) throws Exception {
