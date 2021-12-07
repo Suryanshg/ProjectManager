@@ -150,6 +150,25 @@ public class ProjectDAO {
 			throw new Exception("Failed to delete project: " + e.getMessage());
 		}
 	}
+	
+	
+	// Archiving a project by its id
+	public boolean archiveProject(String id) throws Exception {
+		try {
+			PreparedStatement ps = conn.prepareStatement("UPDATE Project SET isArchived = 1 WHERE id = ?;");
+			ps.setString(1, id);
+			int numAffected = ps.executeUpdate();
+			ps.close();
+			
+			return (numAffected == 1);
+			
+		} catch (Exception e) {
+			throw new Exception("Failed to archive project: " + e.getMessage());
+		}
+	}
+	
+	
+	
 
 	// Helper method to generate a project from the retrieved resultSet
 	private Project generateProject(ResultSet resultSet) throws Exception {

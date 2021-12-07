@@ -95,9 +95,10 @@ public class TaskDAO {
 			PreparedStatement ps = conn.prepareStatement("UPDATE Task SET completed = ? WHERE id = ?;");
 			ps.setInt(1, completed);
 			ps.setString(2, id);
-			ps.execute();
+			int numAffected = ps.executeUpdate();
 			ps.close();
-			return true;
+			return (numAffected == 1);
+			
 		} catch (Exception e) {
 			throw new Exception("Failed to mark task as complete: " + e.getMessage());
 		}
@@ -108,9 +109,10 @@ public class TaskDAO {
 			PreparedStatement ps = conn.prepareStatement("UPDATE Task SET title = ? WHERE id = ?;");
 			ps.setString(1, title);
 			ps.setString(2, id);
-			ps.execute();
+			int numAffected = ps.executeUpdate();
 			ps.close();
-			return true;
+			return (numAffected == 1);
+			
 		} catch (Exception e) {
 			throw new Exception("Failed to rename task: " + e.getMessage());
 		}

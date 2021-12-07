@@ -1,7 +1,7 @@
 ---
 openapi: 3.0.2
 info:
-  title: Project Management API
+  title: Project Management API 3.0
   version: 1.0.3
   contact: {}
   license:
@@ -257,31 +257,6 @@ paths:
           description: The task was unable to be created successfully.
       summary: /project/tasks/createTask
       description: Creates a task.
-  /project/tasks/updateTask:
-    post:
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdateTaskRequest'
-        required: true
-      tags:
-      - Project Calls
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateTaskResponse'
-          description: The task was updated successfully.
-        "400":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UpdateTaskResponse'
-          description: The task couldn't be updated.
-      summary: /project/tasks/updateTask
-      description: Updates a task's parameters.
   /project/teammates/createTeammate:
     post:
       requestBody:
@@ -331,6 +306,51 @@ paths:
                 $ref: '#/components/schemas/DeleteTeammateResponse'
           description: The teammate wasn't deleted successfully.
       summary: /project/teammates/deleteTeammate
+  /project/tasks/markTask:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MarkTaskRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkTaskResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MarkTaskResponse'
+          description: Bad request
+      summary: Marking a task
+  /project/tasks/renameTask:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RenameTaskRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenameTaskResponse'
+          description: OK
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RenameTaskResponse'
+          description: |
+            Bad Request
+      summary: Renaming a Task
 components:
   schemas:
     Project:
@@ -719,26 +739,6 @@ components:
       example:
         taskid: ""
         teammateid: ""
-    UpdateTaskRequest:
-      title: Root Type for updateTaskRequest
-      description: Used for marking as well as renaming a task
-      required:
-      - taskid
-      type: object
-      properties:
-        taskid:
-          description: The ID of the task.
-          type: string
-        name:
-          description: The name of the task.
-          type: string
-        completed:
-          description: Whether the task is completed or not.
-          type: boolean
-      example:
-        taskid: ""
-        name: ""
-        completed: true
     TasksResponse:
       description: Gets the tasks related to a particular project
       required:
@@ -784,19 +784,6 @@ components:
         error:
           description: 'error message       '
           type: string
-    UpdateTaskResponse:
-      description: ""
-      required:
-      - statusCode
-      - error
-      type: object
-      properties:
-        statusCode:
-          description: status code
-          type: integer
-        error:
-          description: error message
-          type: string
     TeammatesResponse:
       description: ""
       required:
@@ -817,6 +804,66 @@ components:
           description: error message
           type: string
     DeleteTeammateResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    MarkTaskRequest:
+      title: Root Type for updateTaskRequest
+      description: Used for marking as well as renaming a task
+      required:
+      - taskid
+      - completed
+      type: object
+      properties:
+        taskid:
+          description: The ID of the task.
+          type: string
+        completed:
+          description: Whether the task is completed or not.
+          type: boolean
+      example:
+        taskid: ""
+        completed: true
+    MarkTaskResponse:
+      description: ""
+      required:
+      - statusCode
+      - error
+      type: object
+      properties:
+        statusCode:
+          description: status code
+          type: integer
+        error:
+          description: error message
+          type: string
+    RenameTaskRequest:
+      title: Root Type for updateTaskRequest
+      description: Used for marking as well as renaming a task
+      required:
+      - taskid
+      - name
+      type: object
+      properties:
+        taskid:
+          description: The ID of the task.
+          type: string
+        name:
+          description: The new name of the task
+          type: string
+      example:
+        taskid: ""
+        completed: true
+    RenameTaskResponse:
       description: ""
       required:
       - statusCode
