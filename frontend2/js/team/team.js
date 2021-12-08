@@ -7,7 +7,7 @@ class Team {
 
     this.render();
   }
-  deleteTask(teammateid, elementid, buttonid) {
+  deleteTeammate(teammateid, elementid, buttonid) {
     const button = $(`#${buttonid}`);
     button.attr("disabled", true);
     fetch(this.apiurl + "project/teammates/deleteTeammate", {
