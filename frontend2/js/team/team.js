@@ -35,21 +35,29 @@ class Team {
         this.render()
       });
   }
-  deleteTeammate(teammateid, elementid, buttonid) {
-    const button = $(`#${buttonid}`);
-    button.attr("disabled", true);
+  updateDeleteTeammate(teammateid) {
+    $("#deleteSubmitButton").attr("onclick", "team.deleteTeammate('" + teammateid + "')")
+  }
+  deleteTeammate(teammateid) {
+    $("#deleteSubmitButton").attr("disabled", true)
+    $("#deleteSubmitButton").html("Deleting...")
+    $("#deleteTeammateErrorDiv").hide()
     fetch(this.apiurl + "project/teammates/deleteTeammate", {
       method: "POST",
       body: JSON.stringify({ teammateid }),
     })
       .then((response) => response.json())
       .then((response) => {
-        if (response["statusCode"] != 200) {
-          button.removeAttr("disabled");
-          $(`#${elementid}`).show();
-          return;
+        $("#deleteSubmitButton").attr("disabled", false)
+        $("#deleteSubmitButton").html("Delete")
+        if (response["statusCode"] == 200) {
+          this.render()
+          $('#deleteTeammateModal').modal('hide');
+
+        } else {
+          $("#deleteTeammateError").html("Failed to delete teammate with status code " + response['statusCode'] + ": " + response['error'])
+          $("#deleteTeammateErrorDiv").show()
         }
-        window.location.reload();
       });
   }
   render() {

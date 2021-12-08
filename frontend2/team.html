@@ -146,6 +146,29 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="deleteTeammateModal" tabindex="-1" aria-labelledby="deleteTeammateModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteProjectModalLabel">Delete this teammate?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Deleting a teammate will remove them and their assignment to tasks. <br><br>
+          This action cannot be undone.
+          <div class="mb-3" id="deleteTeammateErrorDiv" style="display: none">
+            <span id="deleteTeammateError" style="color: red"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="deleteSubmitButton"
+            onclick="console.log('ERROR, not implemented')">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </body>
 
 </html>

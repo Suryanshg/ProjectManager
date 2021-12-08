@@ -1,6 +1,6 @@
 class Teammate {
-  constructor(taskVar, id, name, tasks) {
-    this.taskVar = taskVar;
+  constructor(teammateVar, id, name, tasks) {
+    this.teammateVar = teammateVar;
     this.id = id;
     this.name = name;
     this.tasks = tasks;
@@ -13,9 +13,7 @@ class Teammate {
       <div class="card-body">
         <h6 class="card-subtitle mb-2 text-muted">${this.name}</h6>
         <div style="margin-bottom: 1rem">Tasks: ${this.tasks.map((task) => task.title)}</div>
-        <button type="button" class="btn btn-danger" id="taskDeletionButton${this.id
-      }"onclick="${this.taskVar}.deleteTeammate('${this.id}', 'taskDeletionError${this.id
-      }', 'taskDeletionButton${this.id}')">Delete</button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTeammateModal" onclick="${this.teammateVar}.updateDeleteTeammate('${this.id}')">Delete</button>
         <div class="row" id="taskDeletionError${this.id}" style="display: none">
         <div class="col s12">
           <hr />
