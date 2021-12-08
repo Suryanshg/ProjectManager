@@ -35,8 +35,7 @@
           onclick="window.location.href = 'project.html?project=' + getParameterByName('project')">
           Your Tasks
         </button>
-        <button class="btn btn-primary"
-          onclick="window.location.href = 'teammate.html?project=' + getParameterByName('project')">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTeammateModal">
           Add Teammate
         </button>
       </div>
@@ -118,6 +117,31 @@
             <br />
             <button type="button" class="btn btn-danger placeholder disabled col-4"></button>
           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="addTeammateModal" tabindex="-1" aria-labelledby="addTeammateModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add teammate</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="teammateName" class="form-label">Teammate name</label>
+            <input type="text" class="form-control" id="teammateName" placeholder="" autocomplete="off">
+          </div>
+          <div class="mb-3" id="addTeammateErrorDiv" style="display: none">
+            <span id="addTeammateError" style="color: red"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="teammateSubmitButton"
+            onclick="team.createTeammate()">Submit</button>
         </div>
       </div>
     </div>

@@ -7,6 +7,34 @@ class Team {
 
     this.render();
   }
+  createTeammate() {
+    const data = {
+      name: $("#teammateName").val(),
+      projectid: getParameterByName("project"),
+    };
+
+    $("#teammateSubmitButton").attr("disabled", true)
+    $("#teammateSubmitButton").html("Submitting...")
+    $("#addTeammateErrorDiv").hide()
+
+    fetch(this.apiurl + "project/teammates/createTeammate", {
+      method: "POST",
+      body: JSON.stringify(data),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        $("#teammateSubmitButton").attr("disabled", false)
+        $("#teammateSubmitButton").html("Submit")
+
+        if (response["statusCode"] != 200) {
+          $("#addTeammateErrorDiv").show()
+          $("#addTeammateError").html("Failed to add teammate with error code " + response['statusCode'] + ": " + response['error'])
+          return;
+        }
+        $("#teammateName").val("")
+        this.render()
+      });
+  }
   deleteTeammate(teammateid, elementid, buttonid) {
     const button = $(`#${buttonid}`);
     button.attr("disabled", true);
