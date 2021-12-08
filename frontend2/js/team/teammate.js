@@ -12,7 +12,7 @@ class Teammate {
     <div class="card mt-3 mb-3">
       <div class="card-body">
         <h6 class="card-subtitle mb-2 text-muted">${this.name}</h6>
-        <div style="margin-bottom: 0.125rem">Tasks: ${this.tasks.map((task) => task.title)} <br/> <br/></div>
+        <div style="margin-bottom: 1rem">Tasks: ${this.tasks.map((task) => task.title)}</div>
         <button type="button" class="btn btn-danger" id="taskDeletionButton${this.id
       }"onclick="${this.taskVar}.deleteTeammate('${this.id}', 'taskDeletionError${this.id
       }', 'taskDeletionButton${this.id}')">Delete</button>

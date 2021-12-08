@@ -32,6 +32,7 @@ class Team {
       .then((response) => {
         $(this.teamHeader).empty();
         $(this.topdiv).empty();
+        $(this.topdiv).removeClass("placeholder-glow")
         if (response["statusCode"] != 200) {
           if (response["statusCode"] == 422) {
             $(this.header).html("A project with this ID doesn't exist.");
