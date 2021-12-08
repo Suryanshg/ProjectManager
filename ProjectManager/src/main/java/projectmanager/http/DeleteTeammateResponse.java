@@ -3,17 +3,17 @@ package projectmanager.http;
 public class DeleteTeammateResponse {
     public boolean deleted;
     public int statusCode;
-    public String errorMessage;
+    public String error;
 
     public DeleteTeammateResponse(boolean deleted, int statusCode) {
         this.deleted = deleted;
         this.statusCode = statusCode;
-        this.errorMessage = "";
+        this.error = "";
     }
 
-    public DeleteTeammateResponse(int statusCode, String errorMessage) {
+    public DeleteTeammateResponse(int statusCode, String error) {
         this.statusCode = statusCode;
-        this.errorMessage = errorMessage;
+        this.error = error;
         this.deleted = false;
     }
 
@@ -25,11 +25,11 @@ public class DeleteTeammateResponse {
         return this.statusCode;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setError(String error) {
+        this.error = error;
     }
 
-    public String getErrorMessage() {
-        return this.errorMessage;
+    public String getError() {
+        return this.error;
     }
 }
