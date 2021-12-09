@@ -13,6 +13,7 @@ class Teammate {
       <div class="card-body">
         <h6 class="card-subtitle mb-2 text-muted">${this.name}</h6>
         <div style="margin-bottom: 1rem">Tasks: ${this.tasks.map((task) => task.title)}</div>
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#assignTeammateModal" onclick="${this.teammateVar}.updateAssignTeammate('${this.id}')">Change Tasks</button>
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTeammateModal" onclick="${this.teammateVar}.updateDeleteTeammate('${this.id}')">Delete</button>
         <div class="row" id="taskDeletionError${this.id}" style="display: none">
         <div class="col s12">

@@ -146,6 +146,48 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="assignTeammateModal" tabindex="-1" aria-labelledby="assignTeammateModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteProjectModalLabel">Change Tasks</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="notGivenSelect" class="form-label">Assign this teammate what task?</label>
+            <select class="form-select" id="notGivenSelect" aria-label="Assign a task to this teammate">
+            </select>
+          </div>
+          <div class="mb-3" id="assignTeammateErrorDiv" style="display: none">
+            <span id="assignTeammateError" style="color: red"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="assignSubmitButton"
+            onclick="console.log('ERROR, not implemented')">Assign</button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="givenSelect" class="form-label">Unassign this teammate from what task?</label>
+            <select class="form-select" id="givenSelect" aria-label="Unassign a task to this teammate">
+            </select>
+          </div>
+          <div class="mb-3" id="unassignTeammateErrorDiv" style="display: none">
+            <span id="unassignTeammateError" style="color: red"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="unassignSubmitButton"
+            onclick="console.log('ERROR, not implemented')">Unassign</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="modal fade" id="deleteTeammateModal" tabindex="-1" aria-labelledby="deleteTeammateModalLabel"
     aria-hidden="true">
     <div class="modal-dialog">

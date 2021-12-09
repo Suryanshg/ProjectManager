@@ -2,22 +2,24 @@ class Team {
   constructor(header, topdiv) {
     this.header = header;
     this.topdiv = topdiv;
-
     this.apiurl = getApiUrl();
+    this.tasks = []
+    this.teammates = []
+    this.projectid = getParameterByName("project")
 
     this.render();
   }
   createTeammate() {
     const data = {
       name: $("#teammateName").val(),
-      projectid: getParameterByName("project"),
+      projectid: this.projectid,
     };
 
     $("#teammateSubmitButton").attr("disabled", true)
     $("#teammateSubmitButton").html("Submitting...")
     $("#addTeammateErrorDiv").hide()
 
-    fetch(this.apiurl + "project/teammates/createTeammate", {
+    fetch(this.apiurl + "project/teammates/assignTeammate", {
       method: "POST",
       body: JSON.stringify(data),
     })
@@ -35,8 +37,43 @@ class Team {
         this.render()
       });
   }
+  updateAssignTeammate(teammateid) {
+    this.setAddedTasks(teammateid)
+    $("#assignSubmitButton").attr("onclick", "team.assignTeammate('" + teammateid + "')")
+    $("#unassignSubmitButton").attr("onclick", "team.unassignTeammate('" + teammateid + "')")
+
+  }
   updateDeleteTeammate(teammateid) {
     $("#deleteSubmitButton").attr("onclick", "team.deleteTeammate('" + teammateid + "')")
+  }
+  assignTeammate(teammateid) {
+    $("#assignSubmitButton").attr("disabled", true)
+    $("#unassignSubmitButton").attr("disabled", true)
+    $("#assignSubmitButton").html("Assigning...")
+    //$("#unassignSubmitButton").html("Unassigning...")
+
+    const requestBody = { teammateid, projectid: this.projectid }
+    console.log($("#notGivenSelect"))
+    requestBody['taskid'] = $("#notGivenSelect").val()
+
+    fetch(this.apiurl + "project/tasks/assignTeammate", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+    })
+      .then((response) => response.json())
+      .then((response) => {
+        $("#assignSubmitButton").attr("disabled", false)
+        $("#assignSubmitButton").html("Assign")
+        if (response["statusCode"] == 200) {
+          this.render()
+          $('#assignTeammateModal').modal('hide');
+
+        } else {
+          $("#assignTeammateError").html("Failed to assign teammate with status code " + response['statusCode'] + ": " + response['error'])
+          $("#assignTeammateErrorDiv").show()
+        }
+      });
+    //TODO unassign
   }
   deleteTeammate(teammateid) {
     $("#deleteSubmitButton").attr("disabled", true)
@@ -61,7 +98,7 @@ class Team {
       });
   }
   render() {
-    fetch(this.apiurl + "project?project=" + getParameterByName("project"), {
+    fetch(this.apiurl + "project?project=" + this.projectid, {
       method: "GET",
     })
       .then((response) => response.json())
@@ -81,15 +118,34 @@ class Team {
         $(this.header).html("Teammate List");
         const project = response["project"];
         const projectid = project.id;
-        const teammates = project.teammates;
+        const { tasks, teammates } = project;
         $(this.topdiv).append("");
         for (const teammate of teammates) {
+          this.teammates.push(teammate)
           const { id, name, tasks } = teammate;
           const teammateClass = new Teammate("team", id, name, tasks);
           $(this.topdiv).append(teammateClass.render());
         }
+        for (const task of tasks) {
+          this.tasks.push(task)
+        }
 
         //$(this.header).html(response["project"]["name"]);
       });
+  }
+
+  setAddedTasks(teammateid) {
+    const givenTasks = (this.teammates.find(t => t.id == teammateid)).tasks;
+    const notGivenTasks = this.tasks.filter(t1 => !givenTasks.find(t2 => t1.title == t2.title))
+    $("#givenSelect").empty()
+    $("#notGivenSelect").empty()
+    for (let task of givenTasks) {
+      /*var repeated = "&nbsp"
+      repeated = repeated.repeat(this.alltasks[i].depth * 2)*/
+      $("#givenSelect").append("<option value='" + task.id + "'>" + task.title + "</option>")
+    }
+    for (let task of notGivenTasks) {
+      $("#notGivenSelect").append("<option value='" + task.id + "'>" + task.title + "</option>")
+    }
   }
 }
