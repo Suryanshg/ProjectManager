@@ -7,26 +7,26 @@ import java.util.UUID;
 public class Teammate {
 	public final UUID id;
 	public final String name;
-	public List<Task> tasks;
+	public List<String> tasks;
 	
 	public Teammate(String name) {
 		this.id = UUID.randomUUID();
 		this.name = name;
-		this.tasks = new ArrayList<Task>();
+		this.tasks = new ArrayList<String>();
 	}
 	
 	public Teammate(UUID id, String name) {
 		this.id = id;
 		this.name = name;
-		this.tasks = new ArrayList<Task>();
+		this.tasks = new ArrayList<String>();
 	}
 	
-	public void addTask(Task task) {
-		this.tasks.add(task);
+	public void addTask(String taskId) {
+		this.tasks.add(taskId);
 	}
 	
-	public void removeTask(Task task) {
-		this.tasks.remove(task);
+	public void removeTask(String taskId) {
+		this.tasks.remove(taskId);
 	}
 	
 	@Override

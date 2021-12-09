@@ -9,7 +9,7 @@ public class Task {
 	public String title;
 	public String outlineNumber;
 	public Boolean completed;
-	public List<Teammate> assignees;
+	public List<String> assignees;
 	public List<Task> subTasks;
 	public Task parentTask;
 
@@ -18,7 +18,7 @@ public class Task {
 		this.title = title;
 		this.outlineNumber = "1";
 		this.completed = false;
-		this.assignees = new ArrayList<Teammate>();
+		this.assignees = new ArrayList<String>();
 		this.subTasks = new ArrayList<Task>();
 		this.parentTask = null;
 	}
@@ -28,17 +28,17 @@ public class Task {
 		this.title = title;
 		this.outlineNumber = outlineNumber;
 		this.completed = completed;
-		this.assignees = new ArrayList<Teammate>();
+		this.assignees = new ArrayList<String>();
 		this.subTasks = new ArrayList<Task>();
 		this.parentTask = null;
 	}
 
-	public void addTeammate(Teammate teammate) {
-		this.assignees.add(teammate);
+	public void addTeammate(String teammateId) {
+		this.assignees.add(teammateId);
 	}
 
-	public void removeTeammate(Teammate teammate) {
-		this.assignees.remove(teammate);
+	public void removeTeammate(String teammateId) {
+		this.assignees.remove(teammateId);
 	}
 
 	public void setCompleted(Boolean completed) {
