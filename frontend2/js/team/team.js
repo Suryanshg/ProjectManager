@@ -39,41 +39,42 @@ class Team {
   }
   updateAssignTeammate(teammateid) {
     this.setAddedTasks(teammateid)
-    $("#assignSubmitButton").attr("onclick", "team.assignTeammate('" + teammateid + "')")
-    $("#unassignSubmitButton").attr("onclick", "team.unassignTeammate('" + teammateid + "')")
+    $("#assignSubmitButton").attr("onclick", "team.assignTeammate('assign','" + teammateid + "')")
+    $("#unassignSubmitButton").attr("onclick", "team.assignTeammate('unassign','" + teammateid + "')")
 
   }
   updateDeleteTeammate(teammateid) {
     $("#deleteSubmitButton").attr("onclick", "team.deleteTeammate('" + teammateid + "')")
   }
-  assignTeammate(teammateid) {
+  assignTeammate(mode, teammateid) {
     $("#assignSubmitButton").attr("disabled", true)
     $("#unassignSubmitButton").attr("disabled", true)
-    $("#assignSubmitButton").html("Assigning...")
-    //$("#unassignSubmitButton").html("Unassigning...")
+    $(`#${mode}SubmitButton`).html("Assigning...")
+    $(`#${mode}TeammateErrorDiv`).hide()
 
     const requestBody = { teammateid, projectid: this.projectid }
-    console.log($("#notGivenSelect"))
-    requestBody['taskid'] = $("#notGivenSelect").val()
 
-    fetch(this.apiurl + "project/tasks/assignTeammate", {
+    if (mode == 'assign') requestBody['taskid'] = $("#notGivenSelect").val()
+    else requestBody['taskid'] = $("#givenSelect").val()
+
+    fetch(this.apiurl + `project/tasks/${mode}Teammate`, {
       method: "POST",
       body: JSON.stringify(requestBody),
     })
       .then((response) => response.json())
       .then((response) => {
         $("#assignSubmitButton").attr("disabled", false)
-        $("#assignSubmitButton").html("Assign")
+        $("#unassignSubmitButton").attr("disabled", false)
+        $(`#${mode}SubmitButton`).html(mode.charAt(0).toUpperCase() + mode.slice(1))
         if (response["statusCode"] == 200) {
           this.render()
           $('#assignTeammateModal').modal('hide');
 
         } else {
-          $("#assignTeammateError").html("Failed to assign teammate with status code " + response['statusCode'] + ": " + response['error'])
-          $("#assignTeammateErrorDiv").show()
+          $(`#${mode}TeammateError`).html("Failed to " + mode + " teammate with status code " + response['statusCode'] + ": " + response['error'])
+          $(`#${mode}TeammateErrorDiv`).show()
         }
       });
-    //TODO unassign
   }
   deleteTeammate(teammateid) {
     $("#deleteSubmitButton").attr("disabled", true)
@@ -117,7 +118,6 @@ class Team {
         }
         $(this.header).html("Teammate List");
         const project = response["project"];
-        const projectid = project.id;
         const { tasks, teammates } = project;
         $(this.topdiv).append("");
         for (const teammate of teammates) {
