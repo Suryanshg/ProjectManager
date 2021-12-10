@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.UUID;
 
 import projectmanager.model.Project;
+import projectmanager.model.Task;
+import projectmanager.model.Teammate;
+import projectmanager.model.TeammateTask;
 import projectmanager.db.TaskDAO;
 import projectmanager.db.TeammateDAO;
 import projectmanager.db.TeammateTaskDAO;
@@ -185,6 +188,40 @@ public class ProjectDAO {
 		// Adding the teammates related to this project
 		TeammateDAO teammateDao = new TeammateDAO();
 		project.teammates = teammateDao.getTeammatesByProjectId(project.id.toString());
+		
+//		teammatetasks
+//		for(task in tasks) {
+//			find teammate tasks with task.id
+//			get teammate ids from results
+//			store in task
+//		}
+		
+		TeammateTaskDAO ttDao = new TeammateTaskDAO();
+		
+		List<TeammateTask> teammateTasks = ttDao.getAllTeammateTaskForProjectId(project.id.toString());
+		
+		// Setting up assignees for Tasks
+		for(Task task: project.tasks) {
+			
+			for(TeammateTask tt: teammateTasks) { // Search through all teammatetasks
+				if(tt.taskid == task.id.toString()) { // If this is the TeammateTask of interest
+					task.assignees.add(tt.teammateid); // Add the teammateid
+				}
+			}
+			
+		}
+		
+		// Setting up tasks for Teammates
+		for(Teammate teammate: project.teammates) {
+			
+			for(TeammateTask tt: teammateTasks) { // Search through all teammatetasks
+				if(tt.teammateid == teammate.id.toString()) {  // If this is the TeammateTask of interest
+					teammate.tasks.add(tt.taskid); // Add the taskid
+				}
+			}
+		}
+		
+		
 
 		return project;
 	}
