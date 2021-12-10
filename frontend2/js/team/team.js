@@ -49,7 +49,7 @@ class Team {
   assignTeammate(mode, teammateid) {
     $("#assignSubmitButton").attr("disabled", true)
     $("#unassignSubmitButton").attr("disabled", true)
-    $(`#${mode}SubmitButton`).html("Assigning...")
+    $(`#${mode}SubmitButton`).html(mode.charAt(0).toUpperCase() + mode.slice(1) + "ing...")
     $(`#${mode}TeammateErrorDiv`).hide()
 
     const requestBody = { teammateid, projectid: this.projectid }
@@ -122,8 +122,9 @@ class Team {
         $(this.topdiv).append("");
         for (const teammate of teammates) {
           this.teammates.push(teammate)
-          const { id, name, tasks } = teammate;
-          const teammateClass = new Teammate("team", id, name, tasks);
+          const { id, name } = teammate;
+          const tTasks = teammate['tasks']
+          const teammateClass = new Teammate("team", id, name, tTasks.map(tt => tasks.find(t => t.id == tt)));
           $(this.topdiv).append(teammateClass.render());
         }
         for (const task of tasks) {
@@ -135,7 +136,7 @@ class Team {
   }
 
   setAddedTasks(teammateid) {
-    const givenTasks = (this.teammates.find(t => t.id == teammateid)).tasks;
+    const givenTasks = (this.tasks.filter(t => t.assignees.includes(teammateid)));
     const notGivenTasks = this.tasks.filter(t1 => !givenTasks.find(t2 => t1.title == t2.title))
     $("#givenSelect").empty()
     $("#notGivenSelect").empty()
