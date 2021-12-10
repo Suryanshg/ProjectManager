@@ -39,7 +39,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 	@Test
 	public void createTaskTestPasses() {
 		String title = "test134";
-		String projectid = "107d139a-9a1d-42e3-9f59-b61a93e6c7a3";
+		String projectid = "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b";
 		String parentTask = null;
 		String SAMPLE_INPUT_STRING = "{\"title\": \"" + title + "\",\"projectid\": \"" + projectid
 				+ "\", \"parentTask\": " + parentTask + "}";
@@ -48,7 +48,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 		try {
 			Task task = testInput(SAMPLE_INPUT_STRING, RESULT);
 			assertEquals(task.title, title);
-			assertEquals(task.outlineNumber, "1");
+			assertEquals(task.outlineNumber, "6");
 			deleteTask(task.id.toString());
 		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
@@ -60,9 +60,9 @@ public class CreateTaskHandlerTest extends LambdaTest {
 		// Let's create a Task with the same title and projectid in the DB
 		TaskDAO dao = new TaskDAO();
 		Task task = new Task("testFail");
-		dao.addTask(task, null, "107d139a-9a1d-42e3-9f59-b61a93e6c7a3");
+		dao.addTask(task, null, "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b");
 
-		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"projectid\": \"107d139a-9a1d-42e3-9f59-b61a93e6c7a3\"}";
+		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"projectid\": \"0bc22c80-a9d6-43a1-b1f2-7fba045eae0b\"}";
 		int RESULT = 422;
 
 		try {

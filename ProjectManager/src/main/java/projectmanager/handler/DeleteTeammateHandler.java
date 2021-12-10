@@ -18,14 +18,14 @@ public class DeleteTeammateHandler implements RequestHandler<DeleteTeammateReque
     String teammateId;
 
     public boolean deleteTeammate(String teammateid) throws Exception{
-        if (logger != null) { logger.log("in createTeammate"); }
+        if (logger != null) { logger.log("in deleteTeammate"); }
         TeammateDAO dao = new TeammateDAO();
 
-        if (logger != null) { logger.log("in createTeammate, retrieved the DAO"); }
+        if (logger != null) { logger.log("in deleteTeammate, retrieved the DAO"); }
 
         boolean result = dao.deleteTeammate(teammateid);
 
-        if (logger != null) { logger.log("in createTeammate, fetched the result"); }
+        if (logger != null) { logger.log("in deleteTeammate, fetched the result"); }
 
         return result;
     }
