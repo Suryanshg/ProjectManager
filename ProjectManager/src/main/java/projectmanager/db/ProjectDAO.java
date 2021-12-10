@@ -204,7 +204,7 @@ public class ProjectDAO {
 		for(Task task: project.tasks) {
 			
 			for(TeammateTask tt: teammateTasks) { // Search through all teammatetasks
-				if(tt.taskid == task.id.toString()) { // If this is the TeammateTask of interest
+				if(tt.taskid.equals(task.id.toString())) { // If this is the TeammateTask of interest
 					task.assignees.add(tt.teammateid); // Add the teammateid
 				}
 			}
@@ -215,7 +215,7 @@ public class ProjectDAO {
 		for(Teammate teammate: project.teammates) {
 			
 			for(TeammateTask tt: teammateTasks) { // Search through all teammatetasks
-				if(tt.teammateid == teammate.id.toString()) {  // If this is the TeammateTask of interest
+				if(tt.teammateid.equals(teammate.id.toString())) {  // If this is the TeammateTask of interest
 					teammate.tasks.add(tt.taskid); // Add the taskid
 				}
 			}
