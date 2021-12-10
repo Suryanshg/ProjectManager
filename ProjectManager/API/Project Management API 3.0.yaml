@@ -402,10 +402,11 @@ components:
           description: The name of the teammate.
           type: string
         tasks:
-          description: The tasks that are assigned to this teammate.
+          description: The tasks that are assigned to this teammate. Contains the
+            task ids.
           type: array
           items:
-            $ref: '#/components/schemas/Task'
+            type: string
         id:
           description: The unique ID of the teammate.
           type: string
@@ -440,10 +441,10 @@ components:
           items:
             $ref: '#/components/schemas/Task'
         assignees:
-          description: Who's assigned to this task.
+          description: Who's assigned to this task. Contains the Teammate ids
           type: array
           items:
-            $ref: '#/components/schemas/Teammate'
+            type: string
         parentTask:
           $ref: '#/components/schemas/Task'
           description: The parent task (not having a task means it's at the top level)
