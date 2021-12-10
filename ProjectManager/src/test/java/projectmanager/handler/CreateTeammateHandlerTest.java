@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import projectmanager.db.TeammateDAO;
 import projectmanager.http.CreateTeammateRequest;
 import projectmanager.http.CreateTeammateResponse;
+import projectmanager.model.Teammate;
 
 public class CreateTeammateHandlerTest extends LambdaTest {
 
@@ -31,7 +32,7 @@ public class CreateTeammateHandlerTest extends LambdaTest {
 
     @Test
     public void createTeammateTestPasses(){
-        String SAMPLE_INPUT_STRING = "{\"name\": \"Test Teammate 2\", \"projectid\": \"107d139a-9a1d-42e3-9f59-b61a93e6c7a3\"}";
+        String SAMPLE_INPUT_STRING = "{\"name\": \"Test Teammate 2\", \"projectid\": \"0bc22c80-a9d6-43a1-b1f2-7fba045eae0b\"}";
         int RESULT = 200;
 
         try {
@@ -43,12 +44,19 @@ public class CreateTeammateHandlerTest extends LambdaTest {
 
 
     @Test
-    public void createProjectTestFails() {
-        String SAMPLE_INPUT_STRING = "{\"name\": \"Test Teammate\", \"projectid\": \"107d139a-9a1d-42e3-9f59-b61a93e6c7a3\" }";
+    public void createTeammateTestFails() throws Exception {
+    	
+    	// Let us create a Teammate with the same name and project id
+    	TeammateDAO dao = new TeammateDAO();
+    	Teammate t = new Teammate("Test Teammate");
+    	dao.addTeammate(t, "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b");
+    	
+        String SAMPLE_INPUT_STRING = "{\"name\": \"Test Teammate\", \"projectid\": \"0bc22c80-a9d6-43a1-b1f2-7fba045eae0b\" }";
         int RESULT = 422;
 
         try {
-            testInput(SAMPLE_INPUT_STRING, RESULT);
+            testInput(SAMPLE_INPUT_STRING, RESULT); 
+            dao.deleteTeammate(t.id.toString());
         } catch (Exception ioe) {
             Assert.fail("invalid: " + ioe.getMessage());
         }
