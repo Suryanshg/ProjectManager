@@ -17,6 +17,7 @@ public class ProjectDAO {
 	java.sql.Connection conn;
 	TeammateDAO teamDAO;
 	TaskDAO taskDAO;
+	TeammateTaskDAO teammateTaskDAO;
 
 	public ProjectDAO() {
 
@@ -24,6 +25,7 @@ public class ProjectDAO {
 			conn = DatabaseUtil.connect();
 			teamDAO = new TeammateDAO();
 			taskDAO = new TaskDAO();
+			teammateTaskDAO = new TeammateTaskDAO();
 		} catch (Exception e) {
 			e.printStackTrace();
 			conn = null;
@@ -134,7 +136,7 @@ public class ProjectDAO {
 	public boolean deleteProject(String id) throws Exception {
 		try {
 			// TODO teammate task dao
-			if (teamDAO.deleteAllTeammates(id) && taskDAO.deleteAllTasks(id)) {
+			if (teammateTaskDAO.unassignAllTeammates(id) && teamDAO.deleteAllTeammates(id) && taskDAO.deleteAllTasks(id)) {
 				PreparedStatement ps = conn.prepareStatement("DELETE FROM Project WHERE id = ?;");
 				ps.setString(1, id);
 				int numAffected = ps.executeUpdate();
@@ -150,8 +152,7 @@ public class ProjectDAO {
 			throw new Exception("Failed to delete project: " + e.getMessage());
 		}
 	}
-	
-	
+
 	// Archiving a project by its id
 	public boolean archiveProject(String id) throws Exception {
 		try {
@@ -159,16 +160,13 @@ public class ProjectDAO {
 			ps.setString(1, id);
 			int numAffected = ps.executeUpdate();
 			ps.close();
-			
+
 			return (numAffected == 1);
-			
+
 		} catch (Exception e) {
 			throw new Exception("Failed to archive project: " + e.getMessage());
 		}
 	}
-	
-	
-	
 
 	// Helper method to generate a project from the retrieved resultSet
 	private Project generateProject(ResultSet resultSet) throws Exception {

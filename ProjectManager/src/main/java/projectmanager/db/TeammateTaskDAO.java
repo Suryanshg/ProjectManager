@@ -69,4 +69,17 @@ public class TeammateTaskDAO {
     }
   }
 
+  public boolean unassignAllTeammates(String projectid) throws Exception {
+    try {
+      PreparedStatement ps = conn.prepareStatement(
+          "DELETE FROM TeammateTask WHERE Project = ?;");
+      ps.setString(1, projectid);
+      ps.execute();
+      ps.close();
+      return true;
+    } catch (Exception e) {
+      throw new Exception("Failed to unassign teammate: " + e.getMessage());
+    }
+  }
+
 }
