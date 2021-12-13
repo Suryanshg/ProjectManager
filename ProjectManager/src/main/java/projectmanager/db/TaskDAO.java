@@ -8,6 +8,7 @@ import java.util.UUID;
 import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import projectmanager.model.Project;
 import projectmanager.model.Task;
+import projectmanager.model.TeammateTask;
 
 public class TaskDAO {
 	java.sql.Connection conn;
@@ -45,10 +46,11 @@ public class TaskDAO {
 				resultSet.close();
 				return false;
 			}
-			// Creating a new project
 		} catch (Exception e) {
 		}
 		try {
+
+			//  Setting up the outline number
 			String statement = String.format("SELECT count(*) AS count FROM Task WHERE parentTask %s ? AND Project %s ?;",
 					parentTask == null ? "IS" : "=", projectid == null ? "IS" : "=");
 			PreparedStatement ps = conn
@@ -67,6 +69,9 @@ public class TaskDAO {
 				resultSet.close();
 				break;
 			}
+			
+
+			// Creating a new task
 			ps = conn.prepareStatement(
 					"INSERT INTO Task (id, title, completed, parentTask, Project, outlineNumber) values(?,?,?,?,?,?);",
 					Statement.RETURN_GENERATED_KEYS);
@@ -83,6 +88,24 @@ public class TaskDAO {
 				ps.setNull(5, Types.NULL);
 			ps.setString(6, task.outlineNumber);
 			ps.execute();
+			
+			// Transfering assignees if the task has a parentTask
+			if(parentTask != null) {
+				// Extract the parentTask's assignees
+				TeammateTaskDAO ttDao = new TeammateTaskDAO();
+				
+				List<TeammateTask> teammateTasks = ttDao.getAllTeammateTaskForTaskId(parentTask);
+				
+	
+				for(TeammateTask tt: teammateTasks) {
+					// Unassign all the teammates from the parentTask
+					ttDao.unassignTeammate(tt.projectid, tt.taskid, tt.teammateid);
+					
+					// Assign all the teammates to the newly created (sub)Task
+					ttDao.assignTeammate(tt.projectid, task.id.toString(), tt.teammateid);
+				}
+			}
+			
 			return true;
 
 		} catch (Exception e) {
@@ -98,7 +121,7 @@ public class TaskDAO {
 			int numAffected = ps.executeUpdate();
 			ps.close();
 			return (numAffected == 1);
-			
+
 		} catch (Exception e) {
 			throw new Exception("Failed to mark task as complete: " + e.getMessage());
 		}
@@ -112,7 +135,7 @@ public class TaskDAO {
 			int numAffected = ps.executeUpdate();
 			ps.close();
 			return (numAffected == 1);
-			
+
 		} catch (Exception e) {
 			throw new Exception("Failed to rename task: " + e.getMessage());
 		}

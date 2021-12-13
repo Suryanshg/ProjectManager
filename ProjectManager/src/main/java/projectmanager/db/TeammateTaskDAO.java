@@ -112,22 +112,29 @@ public class TeammateTaskDAO {
 		return teammateTasks;
 	}
 	
-//	public LinkedList<String> getAllTeammatesForTaskId(String taskid) throws Exception {
-//		
-//		LinkedList<String> teammateIds = n
-//		
-//		try {
-//			PreparedStatement ps = conn.prepareStatement("SELECT teammateId FROM TeammateTask WHERE taskId = ?;");
-//			ps.setString(1, taskid);
-//			ResultSet resultSet =  ps.executeQuery();
-//			
-//			while(resultSet.next()) {
-//				
-//			}
-//
-//		} catch (Exception e) {
-//			throw new Exception("Failed to get all TeammateTasks for the project: " + e.getMessage());
-//		}
-//	}
+	public List<TeammateTask> getAllTeammateTaskForTaskId(String taskid) throws Exception{
+		List<TeammateTask> teammateTasks = new ArrayList<TeammateTask>();
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TeammateTask WHERE taskId = ?;");
+			ps.setString(1, taskid);
+			ResultSet resultSet = ps.executeQuery();
+			
+			while(resultSet.next()) {
+				TeammateTask tt = new TeammateTask(resultSet.getString("Project"), 
+						   						   resultSet.getString("taskId"), 
+						   						   resultSet.getString("teammateId"));
+				teammateTasks.add(tt);
+			}
+			
+		} catch (Exception e) {
+			throw new Exception("Failed to get all TeammateTask for the task: " + e.getMessage());
+		}
+		
+		return teammateTasks;
+	}
+	
+	
+
 
 }
