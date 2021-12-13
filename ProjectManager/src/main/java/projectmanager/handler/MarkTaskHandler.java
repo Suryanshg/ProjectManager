@@ -25,10 +25,10 @@ public class MarkTaskHandler implements RequestHandler<MarkTaskRequest, MarkTask
 		}
 		
 		try {
-			if(completed) {
-				result = dao.markTask(taskid, 0);
-			} else {
+			if (completed) {
 				result = dao.markTask(taskid, 1);
+			} else {
+				result = dao.markTask(taskid, 0);
 			}
 			
 		} catch (Exception e) {

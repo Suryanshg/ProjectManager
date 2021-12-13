@@ -195,6 +195,22 @@ public class TaskDAO {
 		}
 	}
 
+	// For tests - Get a task by ID
+	public Task getTaskById(String id) throws Exception {
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Task WHERE id = ?;");
+			ps.setString(1, id);
+			ResultSet resultSet = ps.executeQuery();
+			resultSet.next();
+			Task t = generateTask(resultSet);
+			resultSet.close();
+			ps.close();
+			return t;
+		} catch (Exception e) {
+			throw new Exception("Failed to get task by ID: " + e.getMessage());
+		}
+	}
+
 	// Helper function to generate a Task
 	private Task generateTask(ResultSet resultSet) throws Exception {
 		// System.out.println("in generateTask");
