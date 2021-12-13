@@ -12,13 +12,17 @@ import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import projectmanager.model.Project;
 import projectmanager.model.Task;
 import projectmanager.model.Teammate;
+import projectmanager.model.TeammateTask;
+import projectmanager.db.TeammateTaskDAO;
 
 public class TeammateDAO {
     java.sql.Connection conn;
+    TeammateTaskDAO ttDAO;
 
     public TeammateDAO() {
         try {
             conn = DatabaseUtil.connect();
+            ttDAO = new TeammateTaskDAO();
         } catch (Exception e) {
             e.printStackTrace();
             conn = null;
@@ -142,7 +146,14 @@ public class TeammateDAO {
 
         // TODO: Set up related tasks
 
-        return new Teammate(id, name);
+        Teammate t = new Teammate(id, name);
+
+        List<TeammateTask> tTasks = this.ttDAO.getAllTeammateTaskForTeammateId(id.toString());
+        t.tasks = new ArrayList<String>();
+        for (TeammateTask tt : tTasks) {
+            t.tasks.add(tt.taskid);
+        }
+        return t;
     }
 
 }

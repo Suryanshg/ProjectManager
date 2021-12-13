@@ -2,6 +2,7 @@ package projectmanager.db;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -9,13 +10,16 @@ import com.mysql.cj.x.protobuf.MysqlxPrepare;
 import projectmanager.model.Project;
 import projectmanager.model.Task;
 import projectmanager.model.TeammateTask;
+import projectmanager.db.TeammateTaskDAO;
 
 public class TaskDAO {
 	java.sql.Connection conn;
+	TeammateTaskDAO ttDAO;
 
 	public TaskDAO() {
 		try {
 			conn = DatabaseUtil.connect();
+			ttDAO = new TeammateTaskDAO();
 		} catch (Exception e) {
 			e.printStackTrace();
 			conn = null;
@@ -50,7 +54,7 @@ public class TaskDAO {
 		}
 		try {
 
-			//  Setting up the outline number
+			// Setting up the outline number
 			String statement = String.format("SELECT count(*) AS count FROM Task WHERE parentTask %s ? AND Project %s ?;",
 					parentTask == null ? "IS" : "=", projectid == null ? "IS" : "=");
 			PreparedStatement ps = conn
@@ -69,7 +73,6 @@ public class TaskDAO {
 				resultSet.close();
 				break;
 			}
-			
 
 			// Creating a new task
 			ps = conn.prepareStatement(
@@ -88,24 +91,23 @@ public class TaskDAO {
 				ps.setNull(5, Types.NULL);
 			ps.setString(6, task.outlineNumber);
 			ps.execute();
-			
+
 			// Transfering assignees if the task has a parentTask
-			if(parentTask != null) {
+			if (parentTask != null) {
 				// Extract the parentTask's assignees
 				TeammateTaskDAO ttDao = new TeammateTaskDAO();
-				
+
 				List<TeammateTask> teammateTasks = ttDao.getAllTeammateTaskForTaskId(parentTask);
-				
-	
-				for(TeammateTask tt: teammateTasks) {
+
+				for (TeammateTask tt : teammateTasks) {
 					// Unassign all the teammates from the parentTask
 					ttDao.unassignTeammate(tt.projectid, tt.taskid, tt.teammateid);
-					
+
 					// Assign all the teammates to the newly created (sub)Task
 					ttDao.assignTeammate(tt.projectid, task.id.toString(), tt.teammateid);
 				}
 			}
-			
+
 			return true;
 
 		} catch (Exception e) {
@@ -251,7 +253,11 @@ public class TaskDAO {
 		List<Task> subTasks = getTasksByParent(id.toString());
 		task.subTasks = subTasks;
 
-		// TODO: Set up the assignees
+		List<TeammateTask> tTasks = this.ttDAO.getAllTeammateTaskForTaskId(id.toString());
+		task.assignees = new ArrayList<String>();
+		for (TeammateTask tt : tTasks) {
+			task.assignees.add(tt.teammateid);
+		}
 
 		return task;
 	}

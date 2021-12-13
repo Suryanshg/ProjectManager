@@ -88,53 +88,37 @@ public class TeammateTaskDAO {
 	}
 
 	public List<TeammateTask> getAllTeammateTaskForProjectId(String projectid) throws Exception {
-		
-		List<TeammateTask> teammateTasks = new ArrayList<TeammateTask>();
-		
-		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TeammateTask WHERE Project = ?;");
-			ps.setString(1, projectid);
-			ResultSet resultSet =  ps.executeQuery();
-			
-			while(resultSet.next()) {
-				
-				TeammateTask tt = new TeammateTask(resultSet.getString("Project"), 
-												   resultSet.getString("taskId"), 
-						                           resultSet.getString("teammateId"));
-				
-				teammateTasks.add(tt);
-			}
-
-		} catch (Exception e) {
-			throw new Exception("Failed to get all TeammateTasks for the project: " + e.getMessage());
-		}
-		
-		return teammateTasks;
+		return getTeammateTasksById(projectid, "Project");
 	}
-	
-	public List<TeammateTask> getAllTeammateTaskForTaskId(String taskid) throws Exception{
+
+	public List<TeammateTask> getAllTeammateTaskForTaskId(String taskid) throws Exception {
+		return getTeammateTasksById(taskid, "taskId");
+	}
+
+	public List<TeammateTask> getAllTeammateTaskForTeammateId(String teammateid) throws Exception {
+		return getTeammateTasksById(teammateid, "teammateId");
+	}
+
+	private List<TeammateTask> getTeammateTasksById(String id, String idType) throws Exception {
 		List<TeammateTask> teammateTasks = new ArrayList<TeammateTask>();
-		
+
 		try {
-			PreparedStatement ps = conn.prepareStatement("SELECT * FROM TeammateTask WHERE taskId = ?;");
-			ps.setString(1, taskid);
+			String statement = String.format("SELECT * FROM TeammateTask WHERE %s = ?;", idType);
+			PreparedStatement ps = conn.prepareStatement(statement);
+			ps.setString(1, id);
 			ResultSet resultSet = ps.executeQuery();
-			
-			while(resultSet.next()) {
-				TeammateTask tt = new TeammateTask(resultSet.getString("Project"), 
-						   						   resultSet.getString("taskId"), 
-						   						   resultSet.getString("teammateId"));
+
+			while (resultSet.next()) {
+				TeammateTask tt = new TeammateTask(resultSet.getString("Project"),
+						resultSet.getString("taskId"),
+						resultSet.getString("teammateId"));
 				teammateTasks.add(tt);
 			}
-			
+
 		} catch (Exception e) {
-			throw new Exception("Failed to get all TeammateTask for the task: " + e.getMessage());
+			throw new Exception("Failed to get all TeammateTask for the " + idType + ": " + e.getMessage());
 		}
-		
+
 		return teammateTasks;
 	}
-	
-	
-
-
 }
