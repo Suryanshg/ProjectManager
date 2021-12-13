@@ -120,17 +120,23 @@ class Team {
         const project = response["project"];
         const { tasks, teammates } = project;
         $(this.topdiv).append("");
+        this.tasks = []
+        for (const task of tasks) {
+          let tasksToLook = [task]
+          let currentTask;
+          while (tasksToLook.length != 0) {
+            currentTask = tasksToLook.pop()
+            this.tasks.push(currentTask)
+            tasksToLook = tasksToLook.concat(currentTask.subTasks)
+          }
+        }
         for (const teammate of teammates) {
           this.teammates.push(teammate)
           const { id, name } = teammate;
           const tTasks = teammate['tasks']
-          const teammateClass = new Teammate("team", id, name, tTasks.map(tt => tasks.find(t => t.id == tt)));
+          const teammateClass = new Teammate("team", id, name, this.tasks.filter(t => tTasks.includes(t.id)));
           $(this.topdiv).append(teammateClass.render());
         }
-        for (const task of tasks) {
-          this.tasks.push(task)
-        }
-
         //$(this.header).html(response["project"]["name"]);
       });
   }
