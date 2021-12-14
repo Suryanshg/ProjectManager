@@ -69,6 +69,7 @@ class Project {
           teammatemap[workingid] = {"name": workingobject['name']}
         }
 
+        teammates = response["project"]["teammates"]
         $(this.header).removeClass("placeholder-glow")
         $(this.header).html(response["project"]["name"]);
         $("#subTasks-root").empty()

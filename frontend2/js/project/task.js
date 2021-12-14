@@ -19,9 +19,11 @@ class Task {
         let assigneearray = []
         if (this.teammates.length > 0) {
             for (let i = 0; i < this.teammates.length; i++) {
-                console.log(this.teammates[i])
-                console.log(teammatemap['9d118e43-e808-4f65-89f9-3927d6fa9960']['name'])
-                assigneearray.push(teammatemap[this.teammates[i]]['name'])
+                try {
+                    assigneearray.push(teammatemap[this.teammates[i]]['name'])
+                } catch (e) {
+                    assigneearray.push("Invalid teammate")
+                }
             }
         } else {
             assigneearray.push("Nobody assigned")
@@ -31,19 +33,33 @@ class Task {
 
         var renderstring = `
         <div class="list-group-item">
-            <button type="button" class="btn btn-primary btn-sm">Mark</button><b>${this.position}</b> ${this.title} <br>
+            <p style="margin-bottom: 0.2rem">
+            <button type="button" class="btn btn-primary btn-sm" id="markButton-${this.id}" onclick="project.mark('${this.id}')" style="margin-right: 5px">🔄</button><b>${this.position}</b> ${this.title} 
+            <button type="button" class="btn btn-secondary btn-sm float-end" id="renameButton-${this.id}" onclick="project.rename('${this.id}')" style="margin-bottom: 2px">Rename</button>
+            </p>
+            <div>
             <i class="bi bi-person-fill"></i> ${assigneestring} 
             <div class="btn-group float-end">
-                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-auto-close="false" aria-expanded="false">
                 Assign teammates
                 </button>
-                <ul class="dropdown-menu">
-                ...
+                <ul class="dropdown-menu" id="teammates-${this.id}">
                 </ul>
+            </div>
             </div>
         </div>
         ${subtaskstring}
         `
         $("#subTasks-" + this.parent).append(renderstring)
+        for (let i = 0; i < teammates.length; i++) {
+            $("#teammates-" + this.id).append(`
+            <li class="dropdown-item">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" onchange="project.teammate('${teammates[i]['id']}')" value="${teammates[i]['id']}" ${this.teammates.includes(teammates[i]['id'] ? "selected": "")}>&nbsp ${teammates[i]['name']}
+                    </label>
+                <div class="checkbox">
+            </li>`) 
+        }
     }
 }
