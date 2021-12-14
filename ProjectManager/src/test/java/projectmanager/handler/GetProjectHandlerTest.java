@@ -32,37 +32,35 @@ public class GetProjectHandlerTest extends LambdaTest {
 		assertEquals(expected, response.project);
 	}
 
+	@Test
+	public void testGetProjectHandler200() {
 
-    @Test
-    public void testGetProjectHandler200() {
-    	
-    	String testId = "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b";
-    	String testName = "erre";
-    	String SAMPLE_INPUT_STRING = "{\"project\": \"" + testId + "\" }";
-    	
-    	Project testProject = new Project(UUID.fromString(testId), testName);
+		String testId = "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b";
+		String testName = "erre";
+		String SAMPLE_INPUT_STRING = "{\"project\": \"" + testId + "\" }";
+
+		Project testProject = new Project(UUID.fromString(testId), testName);
 		int RESULT = 200;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT, testProject);
-			
-		} catch(IOException ioe) {
+
+		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
-    }
-    
-    
-    @Test
-    public void testGetProjectHandler422() {
-    	
-    	String testId = "GARBAGE";
-    	String SAMPLE_INPUT_STRING = "{\"project\": \"" + testId + "\" }";
+	}
+
+	@Test
+	public void testGetProjectHandler422() {
+
+		String testId = "GARBAGE";
+		String SAMPLE_INPUT_STRING = "{\"project\": \"" + testId + "\" }";
 		int RESULT = 422;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT, null);
-		} catch(IOException ioe) {
+		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
-    }
+	}
 }

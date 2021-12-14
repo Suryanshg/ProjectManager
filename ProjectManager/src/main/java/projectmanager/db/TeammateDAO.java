@@ -77,8 +77,10 @@ public class TeammateDAO {
             PreparedStatement ps = conn.prepareStatement("SELECT * FROM Teammate WHERE id = ?;");
             ps.setString(1, id);
             ResultSet resultSet = ps.executeQuery();
-            resultSet.next();
-            Teammate t = generateTeammate(resultSet);
+            Teammate t = null;
+            while (resultSet.next()) {
+                t = generateTeammate(resultSet);
+            }
             resultSet.close();
             ps.close();
             return t;
@@ -142,13 +144,12 @@ public class TeammateDAO {
         // System.out.println("in generateTeammate");
         UUID id = UUID.fromString(resultSet.getString("id"));
         String name = resultSet.getString("name");
-        // String projectid = resultSet.getString("Project");
+        String projectid = resultSet.getString("Project");
 
         // TODO: Set up related tasks
 
-        Teammate t = new Teammate(id, name);
-
-        List<TeammateTask> tTasks = this.ttDAO.getAllTeammateTaskForTeammateId(id.toString());
+        Teammate t = new Teammate(id, name, projectid);
+        List<TeammateTask> tTasks = ttDAO.getAllTeammateTaskForTeammateId(id.toString());
         t.tasks = new ArrayList<String>();
         for (TeammateTask tt : tTasks) {
             t.tasks.add(tt.taskid);

@@ -95,16 +95,16 @@ public class TaskDAO {
 			// Transfering assignees if the task has a parentTask
 			if (parentTask != null) {
 				// Extract the parentTask's assignees
-				TeammateTaskDAO ttDao = new TeammateTaskDAO();
+				TeammateTaskDAO ttDAO = new TeammateTaskDAO();
 
-				List<TeammateTask> teammateTasks = ttDao.getAllTeammateTaskForTaskId(parentTask);
+				List<TeammateTask> teammateTasks = ttDAO.getAllTeammateTaskForTaskId(parentTask);
 
 				for (TeammateTask tt : teammateTasks) {
 					// Unassign all the teammates from the parentTask
-					ttDao.unassignTeammate(tt.projectid, tt.taskid, tt.teammateid);
+					ttDAO.unassignTeammate(tt.projectid, tt.taskid, tt.teammateid);
 
 					// Assign all the teammates to the newly created (sub)Task
-					ttDao.assignTeammate(tt.projectid, task.id.toString(), tt.teammateid);
+					ttDAO.assignTeammate(tt.projectid, task.id.toString(), tt.teammateid);
 				}
 			}
 
@@ -226,8 +226,10 @@ public class TaskDAO {
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Task WHERE id = ?;");
 			ps.setString(1, id);
 			ResultSet resultSet = ps.executeQuery();
-			resultSet.next();
-			Task t = generateTask(resultSet);
+			Task t = null;
+			while (resultSet.next()) {
+				t = generateTask(resultSet);
+			}
 			resultSet.close();
 			ps.close();
 			return t;
@@ -243,16 +245,14 @@ public class TaskDAO {
 		String title = resultSet.getString("title");
 		Boolean completed = resultSet.getBoolean("completed");
 		String outlineNumber = resultSet.getString("outlineNumber");
-
-		Task task = new Task(id, title, outlineNumber, completed);
+		String projectid = resultSet.getString("Project");
+		Task task = new Task(id, title, outlineNumber, completed, projectid);
 
 		// String parentId = resultSet.getString("parentTask");
-		// String projectId = resultSet.getString("Project");
 
 		// Setting up the subTasks
 		List<Task> subTasks = getTasksByParent(id.toString());
 		task.subTasks = subTasks;
-
 		List<TeammateTask> tTasks = this.ttDAO.getAllTeammateTaskForTaskId(id.toString());
 		task.assignees = new ArrayList<String>();
 		for (TeammateTask tt : tTasks) {

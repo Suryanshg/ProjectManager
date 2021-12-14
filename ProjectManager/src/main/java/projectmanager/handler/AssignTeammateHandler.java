@@ -7,9 +7,12 @@ import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import projectmanager.db.TeammateTaskDAO;
 import projectmanager.http.AssignTeammateRequest;
 import projectmanager.http.AssignTeammateResponse;
+import projectmanager.http.GenericResponse;
+import projectmanager.middleware.ProjectArchived;
 
 public class AssignTeammateHandler implements RequestHandler<AssignTeammateRequest, AssignTeammateResponse> {
   LambdaLogger logger;
+  ProjectArchived archivedMiddleware = new ProjectArchived();
 
   public boolean assignTeammate(String projectid, String taskid, String teammateid) throws Exception {
     if (logger != null) {
@@ -37,12 +40,15 @@ public class AssignTeammateHandler implements RequestHandler<AssignTeammateReque
 
     AssignTeammateResponse response;
     try {
-      if (assignTeammate(req.getProjectid(), req.getTaskid(), req.getTeammateid())) {
-        response = new AssignTeammateResponse(200);
-      } else {
-        response = new AssignTeammateResponse(422,
-            "Assigning a teammate failed! Teammate already assigned to task or incorrect parameters!");
-      }
+      GenericResponse archived = archivedMiddleware.getArchived(req.getProjectid(), context);
+      if (archived.statusCode == 200) {
+        if (assignTeammate(req.getProjectid(), req.getTaskid(), req.getTeammateid()))
+          response = new AssignTeammateResponse(200);
+        else
+          response = new AssignTeammateResponse(422,
+              "Assigning a teammate failed! Teammate already assigned to task or incorrect parameters!");
+      } else
+        response = new AssignTeammateResponse(archived.statusCode, archived.error);
 
     } catch (Exception e) {
       response = new AssignTeammateResponse(400,

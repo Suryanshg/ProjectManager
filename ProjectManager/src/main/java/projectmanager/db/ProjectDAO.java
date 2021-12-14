@@ -16,17 +16,17 @@ import projectmanager.db.TeammateDAO;
 public class ProjectDAO {
 
 	java.sql.Connection conn;
-	TeammateDAO teamDAO;
-	TaskDAO taskDAO;
 	TeammateTaskDAO teammateTaskDAO;
+	TaskDAO taskDAO;
+	TeammateDAO teamDAO;
 
 	public ProjectDAO() {
 
 		try {
 			conn = DatabaseUtil.connect();
-			teamDAO = new TeammateDAO();
-			taskDAO = new TaskDAO();
 			teammateTaskDAO = new TeammateTaskDAO();
+			taskDAO = new TaskDAO();
+			teamDAO = new TeammateDAO();
 		} catch (Exception e) {
 			e.printStackTrace();
 			conn = null;
@@ -90,7 +90,6 @@ public class ProjectDAO {
 
 	// Retrieving a Project by ID
 	public Project getProjectByID(String id) throws Exception {
-
 		try {
 			Project project = null;
 			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Project WHERE id=?;");

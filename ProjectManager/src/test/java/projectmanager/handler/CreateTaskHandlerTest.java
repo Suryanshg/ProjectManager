@@ -48,7 +48,6 @@ public class CreateTaskHandlerTest extends LambdaTest {
 		try {
 			Task task = testInput(SAMPLE_INPUT_STRING, RESULT);
 			assertEquals(task.title, title);
-			assertEquals(task.outlineNumber, "6");
 			deleteTask(task.id.toString());
 		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
@@ -76,7 +75,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 	@Test
 	public void createTaskBadProjectTestFails() {
 		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"projectId\": \"1\"}";
-		int RESULT = 400;
+		int RESULT = 422;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT);
@@ -87,7 +86,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 
 	@Test
 	public void createTaskBadTaskTestFails() {
-		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"parentTask\": \"1\"}";
+		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"parentTask\": \"1\",\"projectid\": \"0bc22c80-a9d6-43a1-b1f2-7fba045eae0b\"}";
 		int RESULT = 400;
 
 		try {

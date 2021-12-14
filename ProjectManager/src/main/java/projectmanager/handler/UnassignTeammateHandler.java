@@ -5,11 +5,14 @@ import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 
 import projectmanager.db.TeammateTaskDAO;
+import projectmanager.http.GenericResponse;
 import projectmanager.http.UnassignTeammateRequest;
 import projectmanager.http.UnassignTeammateResponse;
+import projectmanager.middleware.ProjectArchived;
 
 public class UnassignTeammateHandler implements RequestHandler<UnassignTeammateRequest, UnassignTeammateResponse> {
   LambdaLogger logger;
+  ProjectArchived archivedMiddleware = new ProjectArchived();
 
   public boolean UnassignTeammate(String projectid, String taskid, String teammateid) throws Exception {
     if (logger != null) {
@@ -37,13 +40,16 @@ public class UnassignTeammateHandler implements RequestHandler<UnassignTeammateR
 
     UnassignTeammateResponse response;
     try {
-      if (UnassignTeammate(req.getProjectid(), req.getTaskid(), req.getTeammateid())) {
-        response = new UnassignTeammateResponse(200);
-      } else {
-        response = new UnassignTeammateResponse(422,
-            "Unassigning a teammate failed! Teammate already Unassigned to task or incorrect parameters!");
-      }
+      GenericResponse archived = archivedMiddleware.getArchived(req.getProjectid(), context);
+      if (archived.statusCode == 200) {
+        if (UnassignTeammate(req.getProjectid(), req.getTaskid(), req.getTeammateid()))
+          response = new UnassignTeammateResponse(200);
+        else
+          response = new UnassignTeammateResponse(422,
+              "Unassigning a teammate failed! Teammate already Unassigned to task or incorrect parameters!");
 
+      } else
+        response = new UnassignTeammateResponse(archived.statusCode, archived.error);
     } catch (Exception e) {
       response = new UnassignTeammateResponse(400,
           "Unable to Unassign Teammate to Task: (" + e.getMessage() + ")");

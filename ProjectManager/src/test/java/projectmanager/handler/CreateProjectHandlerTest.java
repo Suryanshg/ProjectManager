@@ -21,32 +21,31 @@ public class CreateProjectHandlerTest extends LambdaTest {
 		CreateProjectResponse response = handler.handleRequest(req, createContext("create project"));
 
 		assertEquals(outgoing, response.statusCode);
-		
-		if(response.statusCode == 200) { // Delete the newly created project
+
+		if (response.statusCode == 200) { // Delete the newly created project
 			ProjectDAO dao = new ProjectDAO();
 			dao.deleteProject(response.projectId);
 		}
-		
+
 	}
 
 	@Test
-	public void createProjectTestPasses(){  
+	public void createProjectTestPasses() {
 		String SAMPLE_INPUT_STRING = "{\"projectName\": \"test60\" }";
 		int RESULT = 200;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT);
-		} catch(Exception ioe) {
+		} catch (Exception ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
 	}
-	
-	
+
 	@Test
 	public void createProjectTestFails() {
 		String SAMPLE_INPUT_STRING = "{\"projectName\": \"test900\" }";
 		int RESULT = 422;
-		
+
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT);
 		} catch (Exception ioe) {

@@ -12,6 +12,7 @@ public class Task {
 	public List<String> assignees;
 	public List<Task> subTasks;
 	public Task parentTask;
+	public String projectid;
 
 	public Task(String title) {
 		this.id = UUID.randomUUID();
@@ -21,9 +22,10 @@ public class Task {
 		this.assignees = new ArrayList<String>();
 		this.subTasks = new ArrayList<Task>();
 		this.parentTask = null;
+		this.projectid = null;
 	}
 
-	public Task(UUID id, String title, String outlineNumber, Boolean completed) {
+	public Task(UUID id, String title, String outlineNumber, Boolean completed, String projectid) {
 		this.id = id;
 		this.title = title;
 		this.outlineNumber = outlineNumber;
@@ -31,6 +33,11 @@ public class Task {
 		this.assignees = new ArrayList<String>();
 		this.subTasks = new ArrayList<Task>();
 		this.parentTask = null;
+		this.projectid = projectid;
+	}
+
+	public void setProjectid(String projectid) {
+		this.projectid = projectid;
 	}
 
 	public void addTeammate(String teammateId) {

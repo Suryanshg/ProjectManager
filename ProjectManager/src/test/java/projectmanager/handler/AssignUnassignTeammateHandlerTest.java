@@ -33,6 +33,7 @@ public class AssignUnassignTeammateHandlerTest extends LambdaTest {
 
   @Test
   public void assignUnassignTeammateTestPasses() {
+    // TODO problem occurs because project doesn't exist
     String projectid = "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b";
     String taskid = "09bc2552-142b-4486-8a56-9e9cde6134d1";
     String teammateid = "9d118e43-e808-4f65-89f9-3927d6fa9960";

@@ -7,11 +7,14 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 import projectmanager.db.TaskDAO;
 import projectmanager.http.CreateTaskRequest;
 import projectmanager.http.CreateTaskResponse;
+import projectmanager.http.GenericResponse;
+import projectmanager.middleware.ProjectArchived;
 import projectmanager.model.Task;
 
 public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, CreateTaskResponse> {
 
 	LambdaLogger logger;
+	ProjectArchived archivedMiddleware = new ProjectArchived();
 
 	Task task;
 
@@ -46,12 +49,15 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 
 		CreateTaskResponse response;
 		try {
-			if (createTask(req.getTitle(), req.getParentTask(), req.getProjectid())) {
-				response = new CreateTaskResponse(task, 200);
-			} else {
-				response = new CreateTaskResponse(422,
-						"Task Creation Failed! Task with the same name/project combination already exists!");
-			}
+			GenericResponse archived = archivedMiddleware.getArchived(req.getProjectid(), context);
+			if (archived.statusCode == 200) {
+				if (createTask(req.getTitle(), req.getParentTask(), req.getProjectid()))
+					response = new CreateTaskResponse(task, 200);
+				else
+					response = new CreateTaskResponse(422,
+							"Task Creation Failed! Task with the same name/project combination already exists!");
+			} else
+				response = new CreateTaskResponse(archived.statusCode, archived.error);
 
 		} catch (Exception e) {
 			response = new CreateTaskResponse(400,
