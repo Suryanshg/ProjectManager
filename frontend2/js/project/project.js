@@ -96,9 +96,57 @@ class Project {
         this.recursivecreate(tasks[i]['subTasks'], depth + 1, tasks[i]['id'], outline + tasks[i]['outlineNumber'] + ".", tasks[i]['assignees'])
       }
     }
-
-
   }
+
+    teammate(taskid, teammateid) {
+      let url = ""
+      if ($("#teammatebox-" + taskid + "-" + teammateid).prop("checked")) {
+        url = "assignTeammate"
+      } else {
+        url = "unassignTeammate"
+      }
+
+      let reqbody = {
+        "taskid": taskid,
+        "teammateid": teammateid,
+        "projectid": getParameterByName("project")
+      }
+
+      $("#teammatebox-" + taskid + "-" + teammateid).prop("disabled", true)
+      fetch(this.apiurl + "project/tasks/" + url, {
+        body: JSON.stringify(reqbody),
+        method: "POST"
+      })
+      .then((response) => response.json())
+      .then((response) => {
+        if (response['statusCode'] != 200) {
+          $("#teammatebox-" + taskid + "-" + teammateid).prop("disabled", false)
+          // TODO - Throw modal when this fails
+          return
+        }
+
+        // Find object for the task in alltasks, then do modifications
+        var taskobj = this.alltasks.find(obj => {
+          return obj.id === taskid
+        })
+
+        if (url == "unassignTeammate") {
+          taskobj.teammates = taskobj.teammates.filter(item => item !== teammateid)
+        } else if (url == "assignTeammate") {
+          taskobj.teammates.push(teammateid)
+        }
+
+        // Sort the teammates to ensure consistent behavior.
+        taskobj.teammates = taskobj.teammates.sort()
+        
+        // Rerender JUST the teammates
+        taskobj.rerenderteammates()
+        // Then disable the box.
+        $("#teammatebox-" + taskid + "-" + teammateid).prop("disabled", false)
+      })
+
+      
+    }
 
   renderselect() {
     $("#fileUnderSelect").empty()

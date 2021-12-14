@@ -56,7 +56,8 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 
 		// TODO: Process request to get the list of titles to create
 		List<String> titles = new ArrayList<String>();
-		String[] array = req.getTitle().split("\n");
+		// Really not sure if the tests can actually carry a true \n in them.
+		String[] array = req.getTitle().split("\n|U+000A");
 
 		for (String title : array) {
 			titles.add(title);
@@ -105,29 +106,33 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 			}
 		}
 
-		// TODO: For each subtask id created, assign the teammates in the round-robin
-		// fashion
-
 		// If the tasks created were subtasks
-		if (req.getParentTask() != null) {
+		if(req.getParentTask() != null) {
+			// Double looped array with MANUAL incrementation.
 
-			int currentTaskIdIndex = 0;
+			// Here's how this works.
+			// For a list of teammates that exceeds the size of the list of tasks, this will just continue to add
+			// teammates to tasks, doubling them up.
 
-			// For all the teammate tasks, assign the teammates in round-robin fashion
-			for (TeammateTask tt : teammateTasks) {
+			// Whenever a task is assigned to a teammate, teammate is MANUALLY incremented upward.
+			// This allows for repeating when teammates > tasks.
 
-				// Assign teammate on the basis of current Task
-				try {
-					ttDao.assignTeammate(req.getProjectid(), createdTaskIds.get(currentTaskIdIndex), tt.teammateid);
-				} catch (Exception e) {
-					response = new CreateTaskResponse(401, "Unable to do assign Teammates in round-robin fashion");
-					return response;
-				}
+			// Checking added to make sure that this won't fail if tasks > teammates
 
-				currentTaskIdIndex++;
-				// if the currentTask exceeds the last created Task, we reset the counter
-				if (currentTaskIdIndex == createdTaskIds.size()) {
-					currentTaskIdIndex = 0;
+			//
+
+			for (int teammate = 0; teammate < teammateTasks.size(); ) {
+				for (int task = 0; task < createdTaskIds.size(); task++) {
+					if (teammate > teammateTasks.size()) {
+						break;
+					}
+					try {
+						ttDao.assignTeammate(req.getProjectid(), createdTaskIds.get(task), teammateTasks.get(teammate).teammateid);
+					} catch (Exception e) {
+						response = new CreateTaskResponse(401, "Failed assignment of teammates.");
+						return response;
+					}
+					teammate++;
 				}
 			}
 		}

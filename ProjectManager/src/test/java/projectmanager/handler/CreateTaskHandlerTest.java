@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 
+import projectmanager.db.ProjectDAO;
 import projectmanager.db.TaskDAO;
 import projectmanager.http.CreateTaskRequest;
 import projectmanager.http.CreateTaskResponse;
@@ -94,6 +95,39 @@ public class CreateTaskHandlerTest extends LambdaTest {
 			testInput(SAMPLE_INPUT_STRING, RESULT);
 		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
+		}
+	}
+
+	@Test
+	public void createTaskWithDecomp() {
+		try {
+			// Setup - Delete all tasks, create decomp task, then assign alice, bob, and charlie to the task.
+			// Alice is 8607f0b6-bd9a-4786-8731-14222d7efe23
+			// Bob is dea87398-62ca-4cfc-bfb6-ee5cffae2b03
+			// Charlie is a56705f8-69a1-48ae-aba2-f295e87ce1ae
+			TaskDAO tdao = new TaskDAO();
+			List<Task> previous_tasks = tdao.getTasksByProject("134beb90-b707-41e5-9f9f-88a29ea7655c");
+
+			for (Task task : previous_tasks) {
+				tdao.deleteTask(String.valueOf(task.id));
+			}
+			Task tltask = new Task("Top level task");
+			tdao.addTask(tltask, null, "134beb90-b707-41e5-9f9f-88a29ea7655c");
+			// Then test the input.
+			String SAMPLE_INPUT_STRING = "{\"title\": \"Decompose1\\nDecompose2\\nDecompose3\",\"parentTask\": \"" + String.valueOf(tltask.id) + "\", \"projectid\": \"134beb90-b707-41e5-9f9f-88a29ea7655c\"}";
+			int RESULT = 200;
+			List<Task> tasks = testInput(SAMPLE_INPUT_STRING, RESULT);
+
+			assertEquals("Decompose1", tasks.get(0).title);
+			assertEquals("8607f0b6-bd9a-4786-8731-14222d7efe23", tasks.get(0).assignees.get(0));
+
+			assertEquals("Decompose2", tasks.get(0).title);
+			assertEquals("a56705f8-69a1-48ae-aba2-f295e87ce1ae", tasks.get(0).assignees.get(0));
+
+			assertEquals("Decompose3", tasks.get(0).title);
+			assertEquals("dea87398-62ca-4cfc-bfb6-ee5cffae2b03", tasks.get(0).assignees.get(0));
+		} catch (Exception e) {
+			Assert.fail("Failed: " + e.getMessage());
 		}
 	}
 

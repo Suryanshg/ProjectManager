@@ -19,7 +19,7 @@ class Team {
     $("#teammateSubmitButton").html("Submitting...")
     $("#addTeammateErrorDiv").hide()
 
-    fetch(this.apiurl + "project/teammates/assignTeammate", {
+    fetch(this.apiurl + "project/teammates/createTeammate", {
       method: "POST",
       body: JSON.stringify(data),
     })
