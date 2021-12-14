@@ -61,6 +61,14 @@ class Project {
           return;
         }
 
+        // Map teammates properly
+        for (var i = 0; i < response["project"]["teammates"].length; i++) {
+          let workingid = response['project']['teammates'][i]['id']
+          let workingobject = response['project']['teammates'][i]
+          teammatemap[workingid] = {}
+          teammatemap[workingid] = {"name": workingobject['name']}
+        }
+
         $(this.header).removeClass("placeholder-glow")
         $(this.header).html(response["project"]["name"]);
         $("#subTasks-root").empty()
@@ -80,11 +88,11 @@ class Project {
 
   recursivecreate(tasks, depth, parent, outline) {
     for (let i = 0; i < tasks.length; i++) {
-      let newtask = new Task(tasks[i]['id'], parent, tasks[i]['subTasks'], tasks[i]['title'], depth + 1, outline + tasks[i]['outlineNumber'] + ".")
+      let newtask = new Task(tasks[i]['id'], parent, tasks[i]['subTasks'], tasks[i]['title'], depth + 1, outline + tasks[i]['outlineNumber'] + ".", tasks[i]['assignees'])
       newtask.render()
       this.alltasks.push(newtask)
       if (tasks[i]['subTasks'].length > 0) {
-        this.recursivecreate(tasks[i]['subTasks'], depth + 1, tasks[i]['id'], outline + tasks[i]['outlineNumber'] + ".")
+        this.recursivecreate(tasks[i]['subTasks'], depth + 1, tasks[i]['id'], outline + tasks[i]['outlineNumber'] + ".", tasks[i]['assignees'])
       }
     }
 
