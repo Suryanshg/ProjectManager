@@ -92,27 +92,33 @@ public class TaskDAO {
 			ps.setString(6, task.outlineNumber);
 			ps.execute();
 
-			// Transfering assignees if the task has a parentTask
-			if (parentTask != null) {
-				// Extract the parentTask's assignees
-				TeammateTaskDAO ttDao = new TeammateTaskDAO();
-
-				List<TeammateTask> teammateTasks = ttDao.getAllTeammateTaskForTaskId(parentTask);
-
-				for (TeammateTask tt : teammateTasks) {
-					// Unassign all the teammates from the parentTask
-					ttDao.unassignTeammate(tt.projectid, tt.taskid, tt.teammateid);
-
-					// Assign all the teammates to the newly created (sub)Task
-					ttDao.assignTeammate(tt.projectid, task.id.toString(), tt.teammateid);
-				}
-			}
+			// Transfering assignees if the task has a parentTask (Commented out as we are trying to decompose into mutliple tasks)
+//			if (parentTask != null) {
+//				// Extract the parentTask's assignees
+//				TeammateTaskDAO ttDao = new TeammateTaskDAO();
+//
+//				List<TeammateTask> teammateTasks = ttDao.getAllTeammateTaskForTaskId(parentTask);
+//
+//				for (TeammateTask tt : teammateTasks) {
+//					// Unassign all the teammates from the parentTask
+//					ttDao.unassignTeammate(tt.projectid, tt.taskid, tt.teammateid);
+//
+//					// Assign all the teammates to the newly created (sub)Task
+//					ttDao.assignTeammate(tt.projectid, task.id.toString(), tt.teammateid);
+//				}
+//			}
 
 			return true;
 
 		} catch (Exception e) {
 			throw new Exception("Failed to insert task: " + e.getMessage());
 		}
+	}
+	
+	// Adding multiple tasks
+	public boolean addTasks(List<Task> tasks, String parentTask, String projectid) {
+		boolean result = false;
+		return result;
 	}
 
 	public boolean markTask(String id, int completed) throws Exception {
