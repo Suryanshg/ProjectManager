@@ -7,11 +7,6 @@ public class CreateTaskResponse {
 	public int statusCode;
 	public String error;
 
-	// public CreateTaskResponse(String taskId, String url) {
-	// this.taskId = taskId;
-	// this.url = url;
-	// }
-
 	// Success
 	public CreateTaskResponse(Task task, int statusCode) {
 		this.task = task;

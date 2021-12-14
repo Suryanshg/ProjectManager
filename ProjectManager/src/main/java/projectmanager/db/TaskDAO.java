@@ -93,7 +93,7 @@ public class TaskDAO {
 			ps.execute();
 
 			// Transfering assignees if the task has a parentTask
-			if (parentTask != null) {
+			/*if (parentTask != null) {
 				// Extract the parentTask's assignees
 				TeammateTaskDAO ttDAO = new TeammateTaskDAO();
 
@@ -106,13 +106,19 @@ public class TaskDAO {
 					// Assign all the teammates to the newly created (sub)Task
 					ttDAO.assignTeammate(tt.projectid, task.id.toString(), tt.teammateid);
 				}
-			}
+			}*/
 
 			return true;
 
 		} catch (Exception e) {
 			throw new Exception("Failed to insert task: " + e.getMessage());
 		}
+	}
+	
+	// Adding multiple tasks
+	public boolean addTasks(List<Task> tasks, String parentTask, String projectid) {
+		boolean result = false;
+		return result;
 	}
 
 	public boolean markTask(String id, int completed) throws Exception {
