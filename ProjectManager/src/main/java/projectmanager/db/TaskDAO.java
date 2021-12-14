@@ -114,12 +114,6 @@ public class TaskDAO {
 			throw new Exception("Failed to insert task: " + e.getMessage());
 		}
 	}
-	
-	// Adding multiple tasks
-	public boolean addTasks(List<Task> tasks, String parentTask, String projectid) {
-		boolean result = false;
-		return result;
-	}
 
 	public boolean markTask(String id, int completed) throws Exception {
 		try {
