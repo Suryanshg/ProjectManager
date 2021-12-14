@@ -132,8 +132,19 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 			}
 		}
 
+		List<Task> tasks = new ArrayList<Task>();
+		TaskDAO tdao = new TaskDAO();
+		for (String taskid : createdTaskIds) {
+			Task t = null;
+			try {
+				t = tdao.getTaskById(taskid);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			tasks.add(t);
+		}
 		// If we get to this point, we can set the response to be successful
-		response = new CreateTaskResponse(null, 200);
+		response = new CreateTaskResponse(tasks, 200);
 
 		return response;
 	}

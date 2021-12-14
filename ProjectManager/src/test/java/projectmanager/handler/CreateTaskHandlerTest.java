@@ -3,6 +3,7 @@ package projectmanager.handler;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -16,12 +17,12 @@ import projectmanager.model.Task;
 
 public class CreateTaskHandlerTest extends LambdaTest {
 
-	Task testInput(String incoming, int outgoing) throws IOException {
+	List<Task> testInput(String incoming, int outgoing) throws IOException {
 		CreateTaskHandler handler = new CreateTaskHandler();
 		CreateTaskRequest req = new Gson().fromJson(incoming, CreateTaskRequest.class);
 		CreateTaskResponse response = handler.handleRequest(req, createContext("create task"));
+		System.out.println(response.error);
 		assertEquals(outgoing, response.statusCode);
-		// System.out.println(response.error);
 		return response.task;
 	}
 
@@ -38,7 +39,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 
 	@Test
 	public void createTaskTestPasses() {
-		String title = "test134";
+		String title = "test139";
 		String projectid = "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b";
 		String parentTask = null;
 		String SAMPLE_INPUT_STRING = "{\"title\": \"" + title + "\",\"projectid\": \"" + projectid
@@ -46,9 +47,9 @@ public class CreateTaskHandlerTest extends LambdaTest {
 		int RESULT = 200;
 
 		try {
-			Task task = testInput(SAMPLE_INPUT_STRING, RESULT);
-			assertEquals(task.title, title);
-			deleteTask(task.id.toString());
+			List<Task> task = testInput(SAMPLE_INPUT_STRING, RESULT);
+			assertEquals(task.get(0).title, title);
+			deleteTask(task.get(0).id.toString());
 		} catch (IOException ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
@@ -74,8 +75,8 @@ public class CreateTaskHandlerTest extends LambdaTest {
 
 	@Test
 	public void createTaskBadProjectTestFails() {
-		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"projectId\": \"1\"}";
-		int RESULT = 422;
+		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"projectId\": \"aaaaaaaaaaaaaaaa\"}";
+		int RESULT = 400;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT);

@@ -54,7 +54,7 @@ public class MarkTaskHandlerTest extends LambdaTest {
 	@Test
 	public void MarkTaskComplete() {
 		// Create a test task
-		String id = createTask("testTask", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
+		String id = createTask("testTask2", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
 		// Mark that task as complete & verify input
 		String sample = "{\"taskid\": \"" + id + "\", \"completed\": \"true\"}";
 		int result = 200;
@@ -70,7 +70,7 @@ public class MarkTaskHandlerTest extends LambdaTest {
 	@Test
 	public void MarkTaskIncomplete() {
 		// Create a test task
-		String id = createTask("testTask", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
+		String id = createTask("testTask2", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
 		// Mark that task as complete, then incomplete & verify input
 		String sample_true = "{\"taskid\": \"" + id + "\", \"completed\": \"true\"}";
 		String sample_false = "{\"taskid\": \"" + id + "\", \"completed\": \"false\"}";
@@ -89,7 +89,7 @@ public class MarkTaskHandlerTest extends LambdaTest {
 	@Test
 	public void MarkTaskCycle() {
 		// Create a test task
-		String id = createTask("testTask", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
+		String id = createTask("testTask2", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
 		// Mark that task as complete, then incomplete & verify input
 		String sample_true = "{\"taskid\": \"" + id + "\", \"completed\": \"true\"}";
 		String sample_false = "{\"taskid\": \"" + id + "\", \"completed\": \"false\"}";

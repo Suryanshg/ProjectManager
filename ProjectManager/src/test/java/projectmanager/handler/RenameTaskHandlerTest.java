@@ -60,14 +60,14 @@ public class RenameTaskHandlerTest extends LambdaTest {
 	@Test
 	public void RenameTaskSucceeds() throws Exception{
 		// Create test task
-		String id = createTask("testRename", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
+		String id = createTask("testRename2", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
 		// Rename task...
 		String sample = "{\"taskid\": \"" + id + "\", \"name\": \"testRename2\"}";
 		int result = 200;
 
 		try {
 			testInput(sample, result);
-			assertEquals("testRename2", getTaskName(id));
+			assertEquals("testRename3", getTaskName(id));
 			deleteTask(id);
 		} catch (Exception e) {
 			Assert.fail("Test failed with exception: " + e.getMessage());

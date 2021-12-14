@@ -2,13 +2,15 @@ package projectmanager.http;
 
 import projectmanager.model.Task;
 
+import java.util.List;
+
 public class CreateTaskResponse {
-	public Task task;
+	public List<Task> task;
 	public int statusCode;
 	public String error;
 
 	// Success
-	public CreateTaskResponse(Task task, int statusCode) {
+	public CreateTaskResponse(List<Task> task, int statusCode) {
 		this.task = task;
 		this.statusCode = statusCode;
 		this.error = "";
