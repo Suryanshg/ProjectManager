@@ -48,6 +48,16 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 
 	@Override
 	public CreateTaskResponse handleRequest(CreateTaskRequest req, Context context) {
+
+		try {
+			GenericResponse archived = archivedMiddleware.getArchived(req.getProjectid(), context);
+			if (archived.statusCode != 200)
+				return new CreateTaskResponse(archived.statusCode, archived.error);
+		} catch (Exception e) {
+			return new CreateTaskResponse(400,
+					"Unable to create Task: " + req.getTitle() + "(" + e.getMessage() + ")");
+
+		}
 		logger = context.getLogger();
 		logger.log("Loading Java Lambda handler of CreateTaskHandler");
 		logger.log(req.toString());
@@ -107,21 +117,23 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 		}
 
 		// If the tasks created were subtasks
-		if(req.getParentTask() != null) {
+		if (req.getParentTask() != null) {
 			// Double looped array with MANUAL incrementation.
 
 			// Here's how this works.
-			// For a list of teammates that exceeds the size of the list of tasks, this will just continue to add
+			// For a list of teammates that exceeds the size of the list of tasks, this will
+			// just continue to add
 			// teammates to tasks, doubling them up.
 
-			// Whenever a task is assigned to a teammate, teammate is MANUALLY incremented upward.
+			// Whenever a task is assigned to a teammate, teammate is MANUALLY incremented
+			// upward.
 			// This allows for repeating when teammates > tasks.
 
 			// Checking added to make sure that this won't fail if tasks > teammates
 
 			//
 
-			for (int teammate = 0; teammate < teammateTasks.size(); ) {
+			for (int teammate = 0; teammate < teammateTasks.size();) {
 				for (int task = 0; task < createdTaskIds.size(); task++) {
 					if (teammate >= teammateTasks.size()) {
 						break;

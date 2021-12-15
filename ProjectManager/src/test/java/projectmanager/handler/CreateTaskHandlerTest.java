@@ -77,7 +77,7 @@ public class CreateTaskHandlerTest extends LambdaTest {
 	@Test
 	public void createTaskBadProjectTestFails() {
 		String SAMPLE_INPUT_STRING = "{\"title\": \"testFail\",\"projectId\": \"aaaaaaaaaaaaaaaa\"}";
-		int RESULT = 400;
+		int RESULT = 422;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT);
@@ -101,7 +101,8 @@ public class CreateTaskHandlerTest extends LambdaTest {
 	// Not really a test until I can fix this further.
 	public void createTaskWithDecomp() {
 		try {
-			// Setup - Delete all tasks, create decomp task, then assign alice, bob, and charlie to the task.
+			// Setup - Delete all tasks, create decomp task, then assign alice, bob, and
+			// charlie to the task.
 			// Alice is 8607f0b6-bd9a-4786-8731-14222d7efe23
 			// Bob is dea87398-62ca-4cfc-bfb6-ee5cffae2b03
 			// Charlie is a56705f8-69a1-48ae-aba2-f295e87ce1ae
@@ -114,7 +115,8 @@ public class CreateTaskHandlerTest extends LambdaTest {
 			Task tltask = new Task("Top level task");
 			tdao.addTask(tltask, null, "134beb90-b707-41e5-9f9f-88a29ea7655c");
 			// Then test the input.
-			String SAMPLE_INPUT_STRING = "{\"title\": \"Decompose1\\nDecompose2\\nDecompose3\",\"parentTask\": \"" + String.valueOf(tltask.id) + "\", \"projectid\": \"134beb90-b707-41e5-9f9f-88a29ea7655c\"}";
+			String SAMPLE_INPUT_STRING = "{\"title\": \"Decompose1\\nDecompose2\\nDecompose3\",\"parentTask\": \""
+					+ String.valueOf(tltask.id) + "\", \"projectid\": \"134beb90-b707-41e5-9f9f-88a29ea7655c\"}";
 			int RESULT = 200;
 			List<Task> tasks = testInput(SAMPLE_INPUT_STRING, RESULT);
 
