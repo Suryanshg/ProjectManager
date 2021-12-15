@@ -29,6 +29,9 @@ class Team {
         $("#teammateSubmitButton").html("Submit")
 
         if (response["statusCode"] != 200) {
+          if (response['statusCode'] == 409) {
+            this.render()
+          }
           $("#addTeammateErrorDiv").show()
           $("#addTeammateError").html("Failed to add teammate with error code " + response['statusCode'] + ": " + response['error'])
           return;
@@ -93,6 +96,9 @@ class Team {
           $('#deleteTeammateModal').modal('hide');
 
         } else {
+          if (response['statusCode'] == 409) {
+            this.render()
+          }
           $("#deleteTeammateError").html("Failed to delete teammate with status code " + response['statusCode'] + ": " + response['error'])
           $("#deleteTeammateErrorDiv").show()
         }
@@ -106,6 +112,7 @@ class Team {
       .then((response) => {
         $(this.teamHeader).empty();
         $(this.topdiv).empty();
+        $(this.header).removeClass("placeholder-glow")
         $(this.topdiv).removeClass("placeholder-glow")
         if (response["statusCode"] != 200) {
           if (response["statusCode"] == 422) {
@@ -116,20 +123,13 @@ class Team {
 
           return;
         }
-        $(this.header).html("Teammate List");
         const project = response["project"];
+        $(this.header).html("Teammates for project " + project['name']);
         const { tasks, teammates } = project;
         $(this.topdiv).append("");
         this.tasks = []
-        for (const task of tasks) {
-          let tasksToLook = [task]
-          let currentTask;
-          while (tasksToLook.length != 0) {
-            currentTask = tasksToLook.pop()
-            this.tasks.push(currentTask)
-            tasksToLook = tasksToLook.concat(currentTask.subTasks)
-          }
-        }
+        this.recursiveTaskCreate(tasks, 0, "")
+        console.log(this.tasks)
         for (const teammate of teammates) {
           this.teammates.push(teammate)
           const { id, name } = teammate;
@@ -137,8 +137,26 @@ class Team {
           const teammateClass = new Teammate("team", id, name, this.tasks.filter(t => tTasks.includes(t.id)));
           $(this.topdiv).append(teammateClass.render());
         }
+        if (project['isArchived']) {
+          $("#projectArchivedText").show()
+          $(this.topdiv).find("button").prop("disabled", true)
+          $("#addTeammateButton").prop("disabled", true)
+        }
         //$(this.header).html(response["project"]["name"]);
       });
+  }
+
+  recursiveTaskCreate(tasks, depth, outlineparam) {
+    for (const task of tasks) {
+      console.log(task)
+      const { id, completed, subTasks, outlineNumber, title } = task;
+      console.log(subTasks)
+      let newTask = new Task(id, title, depth + 1, outlineparam + outlineNumber + ".", completed)
+      this.tasks.push(newTask)
+      if (subTasks.length > 0) {
+        this.recursiveTaskCreate(subTasks, depth + 1, outlineparam + outlineNumber + ".")
+      }
+    }
   }
 
   setAddedTasks(teammateid) {

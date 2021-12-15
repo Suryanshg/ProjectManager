@@ -1,7 +1,9 @@
 class Administrator {
-  constructor(topdiv, adminheader) {
+  constructor(topdiv, topdivarchived, adminheader, archivedheader) {
     this.topdiv = topdiv;
+    this.topdivarchived = topdivarchived;
     this.adminheader = adminheader;
+    this.archivedheader = archivedheader;
     this.apiurl = getApiUrl();
 
     this.render();
@@ -23,8 +25,12 @@ class Administrator {
 
         $("#topdiv").empty()
         $("#topdiv").removeClass("placeholder-glow")
+        $("#topdiv-archived").empty()
+        $("#topdiv-archived").removeClass("placeholder-glow")
         $(this.adminheader).removeClass("placeholder-glow")
-        $(this.adminheader).html("Here's all the projects in the system.");
+        $(this.adminheader).html("Active Projects");
+        $(this.archivedheader).removeClass("placeholder-glow")
+        $(this.archivedheader).html("Archived Projects");
         for (var i = 0; i < response["projects"].length; i++) {
           var projectobject = response["projects"][i];
           var project = new Project(
@@ -35,7 +41,11 @@ class Administrator {
             projectobject["tasks"],
             projectobject["teammates"]
           );
-          $(this.topdiv).append(project.render());
+          if (project.archived) {
+            $(this.topdivarchived).append(project.render())
+          } else {
+            $(this.topdiv).append(project.render());
+          }
         }
       });
   }
@@ -59,6 +69,7 @@ class Administrator {
       $("#archiveSubmitButton").html("Archive")
       if (response["statusCode"] == 200) {
         this.render()
+        $("#archiveProjectModal").modal("hide")
       } else {
         $("#archiveProjectError").html("Failed to archive project with status code " + response['statusCode'] + ": " + response['error'])
         $("#archiveProjectErrorDiv").show()
@@ -85,6 +96,7 @@ class Administrator {
       $("#deleteSubmitButton").html("Delete")
       if (response["statusCode"] == 200) {
         this.render()
+        $("#deleteProjectModal").modal("hide")
       } else {
         $("#deleteProjectError").html("Failed to delete project with status code " + response['statusCode'] + ": " + response['error'])
         $("#deleteProjectErrorDiv").show()

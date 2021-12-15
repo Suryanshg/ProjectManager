@@ -42,7 +42,12 @@ class Project {
     }
 
 
-
+    var archivedhtml = "";
+    if (!this.archived) {
+      archivedhtml = `
+      <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#archiveProjectModal" onclick="${this.adminvar}.archiveProject('${this.projectid}')" ${archivedtext}>${this.archived ? "Archived" : "Archive"}</button>
+      `
+    }
 
     var html = `
     <div class="col-sm-12 col-md-6 col-lg-4">
@@ -55,7 +60,7 @@ class Project {
           <div class="progress-bar" role="progressbar" style="width: ${this.percentcomplete}%;" aria-valuenow="${this.percentcomplete}" aria-valuemin="0" aria-valuemax="100">${this.percentcomplete.toFixed(0)}%</div>
         </div>
         <small class="text-muted" style="margin-top: 0.5rem">${this.taskscomplete}/${this.totaltasks} tasks complete</small><br><br>
-        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#archiveProjectModal" onclick="${this.adminvar}.archiveProject('${this.projectid}')" ${archivedtext}>${this.archived ? "Archived" : "Archive"}</button>
+        ${archivedhtml}
         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteProjectModal" onclick="${this.adminvar}.deleteProject('${this.projectid}')">Delete</button>
       </div>
     </div>

@@ -108,8 +108,10 @@ class Project {
 
         if (response['project']['isArchived']) {
           $("#projectArchivedText").show()
-          $("#subTasks-root").attr("disabled", true)
+          $("#subTasks-root").find("button").attr("disabled", true)
           $("#addTaskButton").attr("disabled", true)
+          $(this.teammatesdiv).find("button").attr("disabled", true)
+          $(this.teammatebuttondiv).hide()
         }
       });
   }
@@ -295,8 +297,9 @@ class Project {
       taskobj.rerenderstate()
     })
   }
-  rename(taskid) {
+  rename(taskid, name) {
     $("#renameSubmitButton").attr("onclick", "project.renameconfirm('" + taskid + "')")
+    $("#renameTaskName").attr("placeholder", name)
   }
 
   renameconfirm(taskid) {
