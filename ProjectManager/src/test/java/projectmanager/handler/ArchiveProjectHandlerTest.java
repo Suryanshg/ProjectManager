@@ -22,7 +22,7 @@ import projectmanager.model.Project;
  * A simple test harness for locally invoking your Lambda function handler.
  */
 public class ArchiveProjectHandlerTest extends LambdaTest {
-	
+
 	void testInput(String incoming, int outgoing, boolean archived) throws Exception {
 
 		ArchiveProjectHandler handler = new ArchiveProjectHandler();
@@ -30,44 +30,70 @@ public class ArchiveProjectHandlerTest extends LambdaTest {
 		ArchiveProjectResponse response = handler.handleRequest(req, createContext("archive project"));
 
 		assertEquals(outgoing, response.statusCode);
-		assertEquals(archived, response.archived);
+		if (response.statusCode == 200)
+			assertEquals(archived, response.archived);
 	}
-	
+
 	@Test
-	public void archiveProjectTestPasses() throws Exception{ 
-		
+	public void archiveProjectTestPasses() throws Exception {
+
 		// Create a dummy project
 		ProjectDAO dao = new ProjectDAO();
 		dao.addProject(new Project("testpass"));
-		
+
 		Project testProject = dao.getProject("testpass");
-		
+
 		String projectid = testProject.id.toString();
 		String SAMPLE_INPUT_STRING = "{\"projectid\": \"" + projectid + "\" }";
 		int RESULT = 200;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT, true);
-			
+
 			// Delete the newly created project
 			dao.deleteProject(projectid);
-		} catch(Exception ioe) {
+		} catch (Exception ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
 	}
-	
+
 	@Test
-	public void archiveProjectTestFails() throws Exception{ 
-		
-		String projectid =  "GARBAGE"; //testProject.id.toString();
+	public void archivedMiddlewareTest() throws Exception {
+
+		// Create a dummy project
+		ProjectDAO dao = new ProjectDAO();
+		dao.addProject(new Project("testpass"));
+
+		Project testProject = dao.getProject("testpass");
+
+		String projectid = testProject.id.toString();
+		String SAMPLE_INPUT_STRING = "{\"projectid\": \"" + projectid + "\" }";
+		int RESULT = 200;
+
+		try {
+			testInput(SAMPLE_INPUT_STRING, RESULT, true);
+			RESULT = 409;
+			testInput(SAMPLE_INPUT_STRING, RESULT, true);
+
+			// Delete the newly created project
+			dao.deleteProject(projectid);
+		} catch (Exception ioe) {
+			Assert.fail("invalid: " + ioe.getMessage());
+		}
+	}
+
+	@Test
+	public void archiveProjectTestFails() throws Exception {
+
+		String projectid = "GARBAGE"; // testProject.id.toString();
 		String SAMPLE_INPUT_STRING = "{\"projectid\": \"" + projectid + "\" }";
 		int RESULT = 422;
 
 		try {
 			testInput(SAMPLE_INPUT_STRING, RESULT, false);
-		} catch(Exception ioe) {
+		} catch (Exception ioe) {
 			Assert.fail("invalid: " + ioe.getMessage());
 		}
 	}
-    
+
 }
