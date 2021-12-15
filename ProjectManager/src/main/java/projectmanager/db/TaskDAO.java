@@ -238,6 +238,24 @@ public class TaskDAO {
 		}
 	}
 
+	public Task getTaskByTitleAndProjectId(String title, String projectid) throws Exception {
+		try {
+			PreparedStatement ps = conn.prepareStatement("SELECT * FROM Task WHERE title = ? AND Project=?;");
+			ps.setString(1, title);
+			ps.setString(2, projectid);
+			ResultSet resultSet = ps.executeQuery();
+			Task t = null;
+			while (resultSet.next()) {
+				t = generateTask(resultSet);
+			}
+			resultSet.close();
+			ps.close();
+			return t;
+		} catch (Exception e) {
+			throw new Exception("Failed to get task by title and projectid: " + e.getMessage());
+		}
+	}
+
 	// Helper function to generate a Task
 	private Task generateTask(ResultSet resultSet) throws Exception {
 		// System.out.println("in generateTask");

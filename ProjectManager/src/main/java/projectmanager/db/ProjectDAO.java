@@ -136,7 +136,8 @@ public class ProjectDAO {
 	public boolean deleteProject(String id) throws Exception {
 		try {
 			// TODO teammate task dao
-			if (teammateTaskDAO.unassignAllTeammates(id) && teamDAO.deleteAllTeammates(id) && taskDAO.deleteAllTasks(id)) {
+			if (teammateTaskDAO.unassignAllTeammatesForProjectId(id) && teamDAO.deleteAllTeammates(id)
+					&& taskDAO.deleteAllTasks(id)) {
 				PreparedStatement ps = conn.prepareStatement("DELETE FROM Project WHERE id = ?;");
 				ps.setString(1, id);
 				int numAffected = ps.executeUpdate();

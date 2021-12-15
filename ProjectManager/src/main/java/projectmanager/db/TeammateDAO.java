@@ -62,11 +62,14 @@ public class TeammateDAO {
 
     public Boolean deleteTeammate(String id) throws Exception {
         try {
-            PreparedStatement ps = conn.prepareStatement("DELETE FROM Teammate WHERE id = ?;");
-            ps.setString(1, id);
-            int numAffected = ps.executeUpdate();
-            ps.close();
-            return (numAffected == 1);
+            if (ttDAO.unassignAllTeammatesForTeammateId(id)) {
+                PreparedStatement ps = conn.prepareStatement("DELETE FROM Teammate WHERE id = ?;");
+                ps.setString(1, id);
+                int numAffected = ps.executeUpdate();
+                ps.close();
+                return (numAffected == 1);
+            } else
+                return false;
         } catch (Exception e) {
             throw new Exception("Failed to delete teammate: " + e.getMessage());
         }
