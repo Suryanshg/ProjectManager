@@ -4,6 +4,6 @@ Resources:
     Properties:
       Timeout: 300
       MemorySize: 128
-      Handler: projectmanager.handler.CreateTaskHandler
-      CodeUri: s3://softengproject3733/840436cce58499d72fde76f7793cc39d
+      Handler: projectmanager.handler.UnassignTeammateHandler
+      CodeUri: s3://softengproject3733/e8fe9c7d23c33ddd6442100758d1d558
       Runtime: java8

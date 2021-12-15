@@ -86,6 +86,7 @@ class Project {
         $(this.header).html("Project: " + response["project"]["name"]);
         $("#subTasks-root").empty()
         $("#subTasks-root").removeClass("placeholder-glow")
+        $("#project-title").html("Project Manager - " + response["project"]["name"])
         $(this.teammatesdiv).empty()
         $(this.teammatesheader).removeClass("placeholder-glow")
         $(this.teammatesheader).html("Teammates")
