@@ -21,7 +21,7 @@
   let teammatemap = {};
   let teammates;
   $(function () {
-    project = new Project($("#projectHeader"), $("#topdiv"));
+    project = new Project($("#projectHeader"), $("#topdiv"), $("#teammates-root"), $("#teammateHeader"), $("#teammates-button"));
   });
 </script>
 
@@ -45,24 +45,37 @@
   </nav>
   <div class="container mt-3 mb-3">
     <div class="row mb-3">
-      <div class="col s12">
+      <div class="col-sm-9">
         <h4 id="projectHeader" class="placeholder-glow"><span class="placeholder col-3"></span></h4>
         <h6 class="text-muted mt-2" style="display: none" id="projectArchivedText">This project has been archived, so you can't make any changes.</h6>
-      </div>
-    </div>
-    <div id="topdiv">
-      <div class="list-group placeholder-glow" id="subTasks-root">
-        <div class="list-group-item"><span class="placeholder col-3"></span></div>
-        <div class="list-group" style="margin-left: 15px">
-          <div class="list-group-item"><span class="placeholder col-3"></span></div>
-          <div class="list-group" style="margin-left: 30px">
+        <div id="topdiv mt-3">
+          <div class="list-group placeholder-glow" id="subTasks-root">
+            <div class="list-group-item"><span class="placeholder col-3"></span></div>
+            <div class="list-group" style="margin-left: 15px">
+              <div class="list-group-item"><span class="placeholder col-3"></span></div>
+              <div class="list-group" style="margin-left: 30px">
+                <div class="list-group-item"><span class="placeholder col-3"></span></div>
+              </div>
+              <div class="list-group-item"><span class="placeholder col-3"></span></div>
+            </div>
+            <div class="list-group-item"><span class="placeholder col-3"></span></div>
+            <div class="list-group-item"><span class="placeholder col-3"></span></div>
             <div class="list-group-item"><span class="placeholder col-3"></span></div>
           </div>
-          <div class="list-group-item"><span class="placeholder col-3"></span></div>
         </div>
-        <div class="list-group-item"><span class="placeholder col-3"></span></div>
-        <div class="list-group-item"><span class="placeholder col-3"></span></div>
-        <div class="list-group-item"><span class="placeholder col-3"></span></div>
+      </div>
+      <div class="col-sm-3">
+        <h4 id="teammateHeader" class="placeholder-glow"><span class="placeholder col-3"></span></h4>
+        <div id="topdiv-teammates mt-3">
+          <div class="list-group placeholder-glow" id="teammates-root">
+            <div class="list-group-item"><span class="placeholder col-3"></span></div>
+            <div class="list-group-item"><span class="placeholder col-3"></span></div>
+            <div class="list-group-item"><span class="placeholder col-3"></span></div>
+          </div>
+          <div id="teammates-button" class="mt-3" style="display: none">
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#addTeammateModal">Add Teammate</button>
+           </div>
+        </div>
       </div>
     </div>
   </div>
@@ -80,9 +93,9 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="taskName" class="form-label">Task name</label><br>
-            <small>Adding a task on a newline will add multiple tasks.</small>
-            <textarea type="text" class="form-control" id="taskName" placeholder="" autocomplete="off"></textarea>
+            <label for="taskName" class="form-label">Task name(s)</label>
+            <textarea type="text" class="form-control" rows="3" id="taskName" placeholder="" autocomplete="off"></textarea>
+            <small id="taskNameHelp" class="form-text text-muted">Each line represents a new task to be created.</small>
           </div>
           <div class="mb-3" id="addTaskErrorDiv" style="display: none">
             <span id="addTaskError" style="color: red"></span>
@@ -114,6 +127,66 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary" id="renameSubmitButton" onclick="project.renametaskconfirm('')">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="addTeammateModal" tabindex="-1" aria-labelledby="addTeammateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Add teammate</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="taskName" class="form-label">Teammate name</label>
+            <input type="text" class="form-control" id="addTeammateName" placeholder="" autocomplete="off"></input>
+          </div>
+          <div class="mb-3" id="addTeammateErrorDiv" style="display: none">
+            <span id="addTeammateError" style="color: red"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="addTeammateSubmit" onclick="project.addteammate()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="deleteTeammateModal" tabindex="-1" aria-labelledby="deleteTeammateModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Delete this teammate?</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Deleting this teammate will remove them and disassociate them with any tasks they're attached to. <br><br>
+          This action cannot be undone.
+          <div class="mt-3 mb-3" id="deleteTeammateErrorDiv" style="display: none">
+            <span id="deleteTeammateError" style="color: red"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" id="deleteTeammateButton" onclick="project.deleteteammateconfirm('')">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <span id="errorModalText"></span>        
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         </div>
       </div>
     </div>

@@ -1,7 +1,10 @@
 class Project {
-  constructor(header, topdiv) {
+  constructor(header, topdiv, teammatesdiv, teammatesheader, teammatebuttondiv) {
     this.header = header;
     this.topdiv = topdiv;
+    this.teammatesdiv = teammatesdiv;
+    this.teammatesheader = teammatesheader;
+    this.teammatebuttondiv = teammatebuttondiv;
     this.alltasks = [];
 
     this.apiurl = getApiUrl();
@@ -28,6 +31,9 @@ class Project {
       $("#taskSubmitButton").attr("disabled", false)
       $("#taskSubmitButton").html("Submit")
       if (response["statusCode"] != 200) {
+        if (response['statusCode'] == 409) {
+          this.render()
+        }
         $("#addTaskErrorDiv").show()
         $("#addTaskError").html("Failed to add task with error code " + response['statusCode'] + ": " + response['error'])
       } else {
@@ -50,12 +56,18 @@ class Project {
           $("#addTaskButton").attr("disabled", true)
           if (response["statusCode"] == 422) {
             $(this.header).html("A project with this ID doesn't exist.");
+            $(this.teammatesheader).html("")
             $("#subTasks-root").empty()
             $("#subTasks-root").removeClass("placeholder-glow")
+            $(this.teammatesdiv).empty()
+            $(this.teammatesdiv).removeClass("placeholder-glow")
           } else {
             $(this.header).html("Couldn't load project due to an error.");
+            $(this.teammatesheader).html("")
             $("#subTasks-root").empty()
             $("#subTasks-root").removeClass("placeholder-glow")
+            $(this.teammatesdiv).empty()
+            $(this.teammatesdiv).removeClass("placeholder-glow")
           }
 
           return;
@@ -71,17 +83,32 @@ class Project {
 
         teammates = response["project"]["teammates"]
         $(this.header).removeClass("placeholder-glow")
-        $(this.header).html(response["project"]["name"]);
+        $(this.header).html("Project: " + response["project"]["name"]);
         $("#subTasks-root").empty()
         $("#subTasks-root").removeClass("placeholder-glow")
+        $(this.teammatesdiv).empty()
+        $(this.teammatesheader).removeClass("placeholder-glow")
+        $(this.teammatesheader).html("Teammates")
+        $(this.teammatebuttondiv).show()
         this.alltasks = []
         let tasks = response["project"]["tasks"];
         console.log(tasks)
         this.recursivecreate(tasks, 0, "root", "")
         this.renderselect()
 
+        for (let i = 0; i < teammates.length; i++) {
+          let appendstring = `
+          <div class="list-group-item">
+            ${teammates[i]['name']}
+            <button class="btn btn-sm btn-danger float-end" type="button" data-bs-toggle="modal" data-bs-target="#deleteTeammateModal" onclick="project.deleteteammate('${teammates[i]['id']}')"><i class="bi bi-trash-fill"></i></button>
+          </div> 
+          `
+          $(this.teammatesdiv).append(appendstring)
+        }
+
         if (response['project']['isArchived']) {
           $("#projectArchivedText").show()
+          $("#subTasks-root").attr("disabled", true)
           $("#addTaskButton").attr("disabled", true)
         }
       });
@@ -89,13 +116,90 @@ class Project {
 
   recursivecreate(tasks, depth, parent, outline) {
     for (let i = 0; i < tasks.length; i++) {
-      let newtask = new Task(tasks[i]['id'], parent, tasks[i]['subTasks'], tasks[i]['title'], depth + 1, outline + tasks[i]['outlineNumber'] + ".", tasks[i]['assignees'])
+      let newtask = new Task(tasks[i]['id'], parent, tasks[i]['subTasks'], tasks[i]['title'], depth + 1, outline + tasks[i]['outlineNumber'] + ".", tasks[i]['assignees'], tasks[i]['completed'])
       newtask.render()
       this.alltasks.push(newtask)
       if (tasks[i]['subTasks'].length > 0) {
-        this.recursivecreate(tasks[i]['subTasks'], depth + 1, tasks[i]['id'], outline + tasks[i]['outlineNumber'] + ".", tasks[i]['assignees'])
+        this.recursivecreate(tasks[i]['subTasks'], depth + 1, tasks[i]['id'], outline + tasks[i]['outlineNumber'] + ".", tasks[i]['assignees'], tasks[i]['completed'])
       }
     }
+  }
+
+  addteammate() {
+    var reqbody = {
+      "projectid": getParameterByName("project"),
+      "name": $("#addTeammateName").val()
+    }
+
+    $("#addTeammateErrorDiv").hide()
+    $("#addTeammateSubmit").html("Submitting...")
+    $("#addTeammateSubmit").prop("disabled", true)
+    fetch(this.apiurl + "project/teammates/createTeammate", {
+      body: JSON.stringify(reqbody),
+      method: "POST"
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      $("#addTeammateSubmit").html("Submit")
+      $("#addTeammateSubmit").prop("disabled", false)
+      if (response['statusCode'] != 200) {
+        if (response['statusCode'] == 409) {
+          this.render()
+        }
+
+        $("#addTeammateErrorDiv").show()
+        $("#addTeammateError").html("Failed to add teammate with status code " + response['statusCode'] + ": " + response['error'])
+        return
+      }
+      
+      $("#addTeammateName").val("")
+      this.render()
+    })
+  }
+
+  deleteteammate(teammateid) {
+    $("#deleteTeammateButton").attr("onclick", "project.deleteteammateconfirm('" + teammateid + "')")
+  }
+
+  deleteteammateconfirm(teammateid) {
+    var reqbody = {
+      "teammateid": teammateid
+    }
+
+    $("#deleteTeammateErrorDiv").hide()
+    $("#deleteTeammateButton").html("Deleting...")
+    $("#deleteTeammateButton").prop("disabled", true)
+    fetch(this.apiurl + "project/teammates/deleteTeammate", {
+      body: JSON.stringify(reqbody),
+      method: "POST"
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      $("#deleteTeammateButton").html("Delete")
+      $("#deleteTeammateButton").prop("disabled", false)
+
+      if (response['statusCode'] != 200) {
+        if (response['statusCode'] == 409) {
+          this.render()
+        }
+
+        $("#deleteTeammateErrorDiv").show()
+        $("#deleteTeammateError").html("Failed to delete teammate with status code " + response['statusCode'] + ": " + response['error'])
+        return
+      }
+
+      this.render()
+      let deleteModal = new bootstrap.Modal(document.getElementById("deleteTeammateModal"))
+      deleteModal.hide()
+    })
+  }
+
+  errorModal(title, response) {
+    $("#errorModalLabel").html(title)
+    $("#errorModalText").html(title + " with status code " + response['statusCode'] + ": " + response['error'])
+
+    let errorModal = new bootstrap.Modal(document.getElementById("errorModal"))
+    errorModal.show()
   }
 
     teammate(taskid, teammateid) {
@@ -121,7 +225,10 @@ class Project {
       .then((response) => {
         if (response['statusCode'] != 200) {
           $("#teammatebox-" + taskid + "-" + teammateid).prop("disabled", false)
-          // TODO - Throw modal when this fails
+          if (response['statusCode'] == 409) {
+            this.render()
+          }
+          this.errorModal("Failed to change teammate assignment", response)
           return
         }
 
@@ -147,9 +254,49 @@ class Project {
 
       
     }
+  
+  
+  
 
+  mark(taskid) {
+    let completedstate;
+    if ($("#markButton-" + taskid).html() == "🔄") {
+      completedstate = true
+    } else {
+      completedstate = false
+    }
+
+    let reqbody = {
+      "taskid": taskid,
+      "completed": completedstate
+    }
+
+    $("#markButton-" + taskid).prop("disabled", true)
+    fetch(this.apiurl + "project/tasks/markTask", {
+      body: JSON.stringify(reqbody),
+      method: "POST"
+    })
+    .then((response) => response.json())
+    .then((response) => {
+      $("#markButton-" + taskid).prop("disabled", false)
+      if (response['statusCode'] != 200) {
+        if (response['statusCode'] == 409) {
+          this.render()
+        }
+        this.errorModal("Failed to change task state", response)
+        return
+      }
+
+      var taskobj = this.alltasks.find(obj => {
+        return obj.id === taskid
+      })
+
+      taskobj.completed = completedstate
+      taskobj.rerenderstate()
+    })
+  }
   rename(taskid) {
-    $("#renameSubmitButton").prop("onclick", "project.renameconfirm('" + taskid + "')")
+    $("#renameSubmitButton").attr("onclick", "project.renameconfirm('" + taskid + "')")
   }
 
   renameconfirm(taskid) {
@@ -164,11 +311,14 @@ class Project {
       body: JSON.stringify(reqbody),
       method: "POST"
     })
-    .then((response) => response)
+    .then((response) => response.json())
     .then((response) => {
       $("#renameSubmitButton").html("Submit")
       $("#renameSubmitButton").prop("disabled", false)
       if (response['statusCode'] != 200) {
+        if (response['statusCode'] == 409) {
+          this.render()
+        }
         $("#renameTaskErrorDiv").show()
         $("#renameTaskError").html("Failed to rename task with status code " + response['statusCode'] + ": " + response['error'])
         return

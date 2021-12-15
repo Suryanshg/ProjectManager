@@ -14,9 +14,11 @@ class Project {
 
   calculatetaskscomplete(tasks) {
     for (let i = 0; i < tasks.length; i++) {
-      this.totaltasks++;
-      if (tasks[i]['completed']) {
-        this.taskscomplete++;
+      if (tasks[i]['subTasks'] == 0) {
+        this.totaltasks++;
+        if (tasks[i]['completed']) {
+          this.taskscomplete++;
+        }
       }
 
       if (tasks[i]['subTasks'].length > 0) {
