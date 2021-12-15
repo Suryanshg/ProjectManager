@@ -33,9 +33,9 @@ public class DeleteTeammateHandlerTest extends LambdaTest {
     public void deleteTeammateTestPasses() throws Exception {
         // Make a dummy teammate
         TeammateDAO dao = new TeammateDAO();
-        dao.addTeammate(new Teammate("TestDelete Teammate"), "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b");
+        dao.addTeammate(new Teammate("TestDelete Teammate2"), "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b");
 
-        Teammate teammate = dao.getTeammateByNameAndProjectId("TestDelete Teammate",
+        Teammate teammate = dao.getTeammateByNameAndProjectId("TestDelete Teammate2",
                 "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b");
 
         String teammateid = teammate.id.toString();
