@@ -4,6 +4,6 @@ Resources:
     Properties:
       Timeout: 300
       MemorySize: 128
-      Handler: projectmanager.handler.DeleteTeammateHandler
+      Handler: projectmanager.handler.CreateTaskHandler
       CodeUri: Function
       Runtime: java8

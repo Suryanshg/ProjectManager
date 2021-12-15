@@ -46,8 +46,9 @@ public class RenameTaskHandler implements RequestHandler<RenameTaskRequest, Rena
 				"Rename Failed!");
 		try {
 			Task t = this.dao.getTaskById(req.getTaskid());
-			if (t == null)
+			if (t == null) {
 				return typicalErrorResponse;
+			}
 			GenericResponse archived = archivedMiddleware.getArchived(t.projectid, context);
 			if (archived.statusCode == 200) {
 				if (renameTask(req.getTaskid(), req.getName()))

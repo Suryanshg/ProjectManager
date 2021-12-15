@@ -123,7 +123,7 @@ public class CreateTaskHandler implements RequestHandler<CreateTaskRequest, Crea
 
 			for (int teammate = 0; teammate < teammateTasks.size(); ) {
 				for (int task = 0; task < createdTaskIds.size(); task++) {
-					if (teammate > teammateTasks.size()) {
+					if (teammate >= teammateTasks.size()) {
 						break;
 					}
 					try {

@@ -4,6 +4,6 @@ Resources:
     Properties:
       Timeout: 300
       MemorySize: 128
-      Handler: projectmanager.handler.DeleteTeammateHandler
-      CodeUri: s3://softengproject3733/abd09c9c5fb1305ddd297f198ad1410a
+      Handler: projectmanager.handler.CreateTaskHandler
+      CodeUri: s3://softengproject3733/840436cce58499d72fde76f7793cc39d
       Runtime: java8

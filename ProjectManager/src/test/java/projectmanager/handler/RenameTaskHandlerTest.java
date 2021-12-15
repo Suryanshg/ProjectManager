@@ -18,6 +18,7 @@ public class RenameTaskHandlerTest extends LambdaTest {
 		RenameTaskHandler handler = new RenameTaskHandler();
 		RenameTaskRequest req = new Gson().fromJson(incoming, RenameTaskRequest.class);
 		RenameTaskResponse response = handler.handleRequest(req, createContext("rename task"));
+		System.out.println(response.error);
 		assertEquals(outgoing, response.statusCode);
 	}
 
@@ -60,9 +61,9 @@ public class RenameTaskHandlerTest extends LambdaTest {
 	@Test
 	public void RenameTaskSucceeds() throws Exception{
 		// Create test task
-		String id = createTask("testRename2", "0bc22c80-a9d6-43a1-b1f2-7fba045eae0b", null);
+		String id = createTask("testRename2", "24ba3f65-a766-4cd4-a8b8-d9e9c55a1939", null);
 		// Rename task...
-		String sample = "{\"taskid\": \"" + id + "\", \"name\": \"testRename2\"}";
+		String sample = "{\"taskid\": \"" + id + "\", \"name\": \"testRename3\"}";
 		int result = 200;
 
 		try {

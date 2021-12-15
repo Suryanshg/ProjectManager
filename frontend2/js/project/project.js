@@ -148,6 +148,36 @@ class Project {
       
     }
 
+  rename(taskid) {
+    $("#renameSubmitButton").prop("onclick", "project.renameconfirm('" + taskid + "')")
+  }
+
+  renameconfirm(taskid) {
+    let reqbody = {
+      "taskid": taskid,
+      "name": $("#renameTaskName").val()
+    }
+    $("#renameTaskErrorDiv").hide()
+    $("#renameSubmitButton").html("Submitting...")
+    $("#renameSubmitButton").prop("disabled", true)
+    fetch(this.apiurl + "project/tasks/renameTask", {
+      body: JSON.stringify(reqbody),
+      method: "POST"
+    })
+    .then((response) => response)
+    .then((response) => {
+      $("#renameSubmitButton").html("Submit")
+      $("#renameSubmitButton").prop("disabled", false)
+      if (response['statusCode'] != 200) {
+        $("#renameTaskErrorDiv").show()
+        $("#renameTaskError").html("Failed to rename task with status code " + response['statusCode'] + ": " + response['error'])
+        return
+      }
+
+      this.render()
+    })
+  }
+
   renderselect() {
     $("#fileUnderSelect").empty()
     $("#fileUnderSelect").append("<option value='root' selected>File as top level task</option>")

@@ -80,8 +80,9 @@
             </select>
           </div>
           <div class="mb-3">
-            <label for="taskName" class="form-label">Task name</label>
-            <input type="text" class="form-control" id="taskName" placeholder="" autocomplete="off">
+            <label for="taskName" class="form-label">Task name</label><br>
+            <small>Adding a task on a newline will add multiple tasks.</small>
+            <textarea type="text" class="form-control" id="taskName" placeholder="" autocomplete="off"></textarea>
           </div>
           <div class="mb-3" id="addTaskErrorDiv" style="display: none">
             <span id="addTaskError" style="color: red"></span>
@@ -90,6 +91,29 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           <button type="button" class="btn btn-primary" id="taskSubmitButton" onclick="project.newtask()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div> 
+  <div class="modal fade" id="renameTaskModal" tabindex="-1" aria-labelledby="renameTaskModallabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Rename task</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="taskName" class="form-label">Task name</label>
+            <input type="text" class="form-control" id="renameTaskName" placeholder="" autocomplete="off"></input>
+          </div>
+          <div class="mb-3" id="renameTaskErrorDiv" style="display: none">
+            <span id="renameTaskError" style="color: red"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" id="renameSubmitButton" onclick="project.renametaskconfirm('')">Submit</button>
         </div>
       </div>
     </div>

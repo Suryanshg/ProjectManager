@@ -52,7 +52,7 @@ class Task {
         var renderstring = `
         <div class="list-group-item">
             <p style="margin-bottom: 0.2rem">
-            <button type="button" class="btn btn-primary btn-sm" id="markButton-${this.id}" onclick="project.mark('${this.id}')" style="margin-right: 5px">🔄</button><b>${this.position}</b> ${this.title} 
+            <button type="button" class="btn btn-dark btn-sm" id="markButton-${this.id}" onclick="project.mark('${this.id}')" style="margin-right: 5px">🔄</button><b>${this.position}</b> ${this.title} 
             <button type="button" class="btn btn-secondary btn-sm float-end" id="renameButton-${this.id}" onclick="project.rename('${this.id}')" style="margin-bottom: 2px">Rename</button>
             </p>
             <div>
