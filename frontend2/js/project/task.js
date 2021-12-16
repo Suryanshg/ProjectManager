@@ -71,7 +71,7 @@ class Task {
                 <div style="margin-bottom: 0.6rem">
                 <b style="margin-left: 0.2rem">${this.position}</b> ${this.title} 
                 <button type="button" class="btn btn-secondary btn-sm float-end" id="renameButton-${this.id}" data-bs-target="#renameTaskModal" data-bs-toggle="modal" onclick="project.rename('${this.id}', '${this.title}')" style="margin-bottom: 2px">Rename</button>
-                <button type="button" class="btn btn-dark btn-sm float-end" id="markButton-${this.id}" onclick="project.mark('${this.id}')" style="margin-right: 10px; margin-bottom: 2px; margin-right: 5px">${completedstring}</button>
+                <button type="button" class="btn btn-dark btn-sm float-end" id="markButton-${this.id}" onclick="project.mark('${this.id}')" title="Click to change the status of this task" style="margin-right: 10px; margin-bottom: 2px; margin-right: 5px">${completedstring}</button>
                 </div>
                 <i class="bi bi-person-fill"></i> <span id="teammates-${this.id}-span">${assigneestring}</span>
                 <div class="btn-group float-end">

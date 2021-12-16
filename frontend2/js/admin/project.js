@@ -57,7 +57,7 @@ class Project {
         <h6 class="card-subtitle mb-2 text-muted">ID: ${this.projectid}</h6>
         <p class="card-text" style="margin-bottom: 1rem"><i class="bi bi-person-fill"></i> ${this.teammates.length} teammates</p>
         <div class="progress" style="margin-bottom: 0.125rem">
-          <div class="progress-bar" role="progressbar" style="width: ${this.percentcomplete}%;" aria-valuenow="${this.percentcomplete}" aria-valuemin="0" aria-valuemax="100">${this.percentcomplete.toFixed(0)}%</div>
+          <div class="progress-bar" role="progressbar" style="width: ${this.percentcomplete}%;" aria-valuenow="${this.percentcomplete}" aria-valuemin="0" aria-valuemax="100">${Math.floor(this.percentcomplete)}%</div>
         </div>
         <small class="text-muted" style="margin-top: 0.5rem">${this.taskscomplete}/${this.totaltasks} tasks complete</small><br><br>
         ${archivedhtml}

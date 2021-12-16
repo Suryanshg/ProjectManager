@@ -192,8 +192,7 @@ class Project {
       }
 
       this.render()
-      let deleteModal = new bootstrap.Modal(document.getElementById("deleteTeammateModal"))
-      deleteModal.hide()
+      $("#deleteTeammateModal").modal("hide")
     })
   }
 
@@ -328,6 +327,7 @@ class Project {
         return
       }
 
+      $("#renameTaskModal").modal("hide")
       this.render()
     })
   }
